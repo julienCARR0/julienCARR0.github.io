@@ -10,7 +10,8 @@ renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.NeutralToneMapping;
 renderer.toneMappingExposure = 1.0;
-renderer.shadowMap.enabled = true;
+const LIGHT = innerWidth < 820 || (navigator.hardwareConcurrency || 8) <= 4;
+renderer.shadowMap.enabled = !LIGHT;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
@@ -243,8 +244,19 @@ function buildRipple() {
   const bg = new THREE.ExtrudeGeometry(shape, { depth: T, bevelEnabled: false, curveSegments: 16 }); bg.rotateX(-PI / 2);
   const board = new THREE.Mesh(bg, [top, edge]); board.castShadow = board.receiveShadow = true; pcb.add(board);
   B.build(pcb);
+  const parts = [];
+  pcb.children.forEach(o => { if (!o.isInstancedMesh) return; o.geometry.computeBoundingBox(); const m = new THREE.Matrix4(); o.getMatrixAt(0, m); const top = new THREE.Vector3().setFromMatrixPosition(m).y + o.geometry.boundingBox.max.y * new THREE.Vector3().setFromMatrixScale(m).y; parts.push({ o, top, delay: Math.min(.55, Math.max(0, (top - 1.6) / 18)) + Math.random() * .12 }); });
+  const C0 = cells[5];
+  const at = (u, v, h) => { const [ox, oz] = rot(u, v, C0.r); return { x: C0.cx + ox, z: C0.cz + oz, h }; };
+  root.userData.labels = [
+    { t: 'NE555 · PWM 20 kHz', ...at(-8.5, -15.5, 1.75) },
+    { t: 'IRS2004S · gate driver', ...at(-8.5, -4.6, 1.75) },
+    { t: 'Demi-pont MOSFET', ...at(-7.5, 5.2, 2.6) },
+    { t: 'Inductances', ...at(9, -2.5, 5.1) },
+    { t: 'Condensateur testé', ...at(-8.6, 16.6, 10.4) },
+  ];
   // emissive glow used to show current flowing (inductors / caps)
-  root.userData.parts = { mFerrite, mAlu, cells };
+  root.userData.parts = { mFerrite, mAlu, cells, pcb, parts };
   root.userData.radius = 1.85;
   root.userData.floor = -0.22;
   return root;
@@ -524,6 +536,8 @@ function buildCar(mats) {
   return g;
 }
 
+const glowTex = canvasTex(64, 64, (g, w, h) => { const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(.25, 'rgba(255,255,255,.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
+function glowMat(col) { const m = new THREE.SpriteMaterial({ map: glowTex, color: col, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, opacity: .9 }); m.userData.keepT = true; m.userData.baseOpacity = .9; return m; }
 /* ================= Formula E object: wheel installed in the car ================= */
 const WHEEL_POS = new THREE.Vector3(0, 600, 740);
 function buildFE() {
@@ -556,7 +570,8 @@ function loadCar() {
       mt.side = THREE.DoubleSide; mt.needsUpdate = true;
       if (/caoutchouc/.test(n)) { o.geometry.computeVertexNormals(); mt.flatShading = false; }
       if (n === 'ecran') { o.material = new THREE.MeshBasicMaterial({ map: screenTex, toneMapped: false }); fe.mats.push(o.material); return; }
-      if (/^led_/.test(n)) { mt.emissive = mt.color.clone(); mt.emissiveIntensity = 1.6; }
+      if (/^led_/.test(n)) { o.material = mt.clone(); o.material.emissive = mt.color.clone(); o.material.emissiveIntensity = 1.6; (P.ledMeshes ||= []).push(o); fe.mats.push(o.material); const sp = new THREE.Sprite(glowMat(o.material.emissive)); sp.scale.setScalar(.018); o.add(sp); fe.mats.push(sp.material); return; }
+      if (/capuchon/.test(o.name)) (P.buttons ||= []).push(o);
       if (n === 'carbone' || n === 'carbone_mat') { mt.envMapIntensity = 1; }
       if (!fe.mats.includes(mt)) fe.mats.push(mt); });
     P.wheel.add(v); fe.wheelLoaded = true; needs = true;
@@ -1003,7 +1018,7 @@ import('./models.js').then(async ({ GLB }) => {
 }).catch(e => console.warn('Modèles KiCad non chargés', e));
 
 /* ================= beats ================= */
-const B = (o = {}) => Object.assign({ rx: 0, ry: 0, s: 1, f: [0, 0, 0], e: 0, pulse: 0, spin: 0, ax: .5 }, o);
+const B = (o = {}) => Object.assign({ rx: 0, ry: 0, s: 1, f: [0, 0, 0], e: 0, ex: 0, pulse: 0, spin: 0, ax: .5 }, o);
 const CELL1 = objects.ripple.content.userData.parts.cells[0];
 const cellPt = (u, v) => { const [x, z] = [CELL1.cx + u, CELL1.cz + v]; return [x / 50, 0, z / 50]; };
 const HC = objects.simfeel.content.userData.housingC.toArray();
@@ -1012,7 +1027,7 @@ const BEATS = {
   'sz-intro': { ripple: B({ rx: .05, ry: -.25, s: .9, spin: .04 }) },
   'sz-1':     { ripple: B({ rx: .3, ry: -.1, s: .95 }) },
   'sz-2':     { ripple: B({ rx: .5, ry: -.35, s: 2.3, f: cellPt(-8.5, -10) }) },
-    'sz-4':     { ripple: B({ rx: .3, ry: -.5, s: 1.05 }) },
+    'sz-4':     { ripple: B({ rx: .55, ry: -.35, s: 1.25, ex: 1 }) },
   'sz-5':     { ripple: B({ rx: .15, ry: -.9, s: 1, spin: .07 }) },
   'st-intro': { fe: B({ ry: PI - .25, s: 1, screen: 0 }) },
   'st-1':     { fe: B({ ry: PI + .3, s: 1.08, screen: 2 }) },
@@ -1033,7 +1048,7 @@ const CAPS = {
   'sz-intro': ['ill', 'Reconstitution', 'Carte de test en charge · 150 × 100 mm'],
   'sz-1': ['ill', 'Reconstitution', '8 canaux · 24 V / 15 V'],
   'sz-2': ['ill', 'Reconstitution', 'Canal 1 · NE555, driver IRS2004S, demi-pont'],
-    'sz-4': ['ill', 'Reconstitution', '8 canaux · courant triangulaire 20 kHz'],
+    'sz-4': ['ill', 'Reconstitution', 'Vue éclatée · étages d\'un canal'],
   'sz-5': ['ill', 'Reconstitution', 'Carte de test en charge'],
   'st-intro': ['ill', 'Modélisé', 'Volant · d\'après le plan du fabricant · écran fictif'],
   'st-1': ['ill', 'Modélisé', 'Écran : décodage bit à bit'],
@@ -1109,21 +1124,22 @@ function frame(now) {
     any = true; O.holder.visible = true;
     const p = tgt || O.last || B(); if (tgt) O.last = tgt;
     const ke = name === 'fe' ? (reduce ? 1 : 1 - Math.exp(-dt * 1.6)) : k;
-    c.rx = damp(c.rx, p.rx, k); c.ry = damp(c.ry, p.ry, k); c.s = damp(c.s, p.s, k); c.e = damp(c.e, p.e, ke); c.ax = damp(c.ax, p.ax, k);
+    c.ex = damp(c.ex || 0, p.ex || 0, k); c.rx = damp(c.rx, p.rx, k); c.ry = damp(c.ry, p.ry, k); c.s = damp(c.s, p.s, k); c.e = damp(c.e, p.e, ke); c.ax = damp(c.ax, p.ax, k);
     c.fx = damp(c.fx, p.f[0], k); c.fy = damp(c.fy, p.f[1], k); c.fz = damp(c.fz, p.f[2], k);
     c.spin += (reduce ? 0 : p.spin) * dt;
     const ud = O.content.userData;
     const radius = ud.radiusFn ? ud.radiusFn(c) : ud.radius;
     const f = ud.focusFn ? ud.focusFn(c) : new THREE.Vector3(c.fx, c.fy, c.fz);
-    const sc = fit / radius * c.s * (.9 + .1 * c.w);
+    const leaving = !tgt, tw2 = 1 - c.w, eio = tw2 * tw2;
+    const sc = fit / radius * c.s * (leaving ? 1 + .55 * eio : .7 + .3 * c.w);
     const envLow = O.env && name !== 'fe' ? .2 : 0; const ax = mobile ? 0 : c.ax, ay = (mobile ? -.02 : -.04) - envLow * (1 - Math.min(1, (c.s - 1) / 1.2));
     const pos = new THREE.Vector3().addScaledVector(right, ax * halfW).addScaledVector(upv, ay * halfH);
-    pos.addScaledVector(upv, -(1 - c.w) * halfH * .25);
+    if (leaving) pos.addScaledVector(right, -eio * halfW * .55).addScaledVector(upv, eio * halfH * .15); else pos.addScaledVector(upv, -tw2 * halfH * .3);
     pos.y += reduce ? 0 : Math.sin(T * .8) * .03;
     O.holder.position.copy(pos); O.holder.scale.setScalar(sc);
     O.content.position.copy(f).multiplyScalar(-1);
-    const parX = mobile ? 0 : py * .04, parY = mobile ? 0 : px * .1;
-    O.spinner.rotation.set(c.rx + uPitch + parX, c.ry + c.spin + uYaw + parY, 0, 'YXZ');
+    const follow = name === 'fe' && c.e < .5 ? 3.2 : 1; const parX = mobile ? 0 : py * .04 * follow, parY = mobile ? 0 : px * .1 * follow;
+    O.spinner.rotation.set(c.rx + uPitch + parX, c.ry + c.spin + uYaw + parY + (leaving ? -eio * .9 : tw2 * .8), 0, 'YXZ');
     if (ud.floorFn) { O.shadow.position.y = ud.floorFn(c, f); O.shadow.visible = true; }
     else { O.shadow.position.y = ud.floor * Math.min(1, 1.6 / c.s) - .02; O.shadow.visible = c.s < 1.6; }
     const a = Math.min(1, c.w * 1.2);
@@ -1143,7 +1159,7 @@ function frame(now) {
     const cam = key.shadow.camera; if (Math.abs(cam.right - R) > .01) { cam.left = -R; cam.right = R; cam.top = R; cam.bottom = -R; cam.near = .5; cam.far = 40; cam.updateProjectionMatrix(); }
   }
   if (fogCol !== null) { scene.fog.color.setHex(fogCol[0]); scene.fog.near = fogCol[1]; scene.fog.far = fogCol[2]; } else { scene.fog.near = 1e4; scene.fog.far = 2e4; }
-  drawScope(dt);
+  drawScope(dt); drawLabels();
   if (any || needs) { renderer.render(scene, camera); needs = any; }
 }
 
@@ -1155,6 +1171,10 @@ function animate(name, O, c, dt, a) {
     const e = c.e, carVis = THREE.MathUtils.smoothstep(e, .12, .7);
     P.car.visible = carVis > .005;
     if (P.car.visible) for (const m of P.carMats) setGhost(m, a * carVis);
+    if (userPage !== null && T > userPageUntil) userPage = null;
+    screenMode = userPage ?? (BEATS[active]?.fe?.screen ?? 0);
+    if (pressed) { const k = Math.max(0, 1 - (T - pressT) / .25); pressed.userData.z0 ??= pressed.position.z; pressed.position.z = pressed.userData.z0 - .0025 * Math.sin(k * PI); if (k <= 0) { pressed.position.z = pressed.userData.z0; pressed = null; } }
+    if (P.ledMeshes) { const hov = !mobile ? Math.max(0, 1 - Math.hypot(px - .45, py + .05) * 1.6) : 0; P.ledMeshes.forEach((m, i) => { const on = ((T * (3 + hov * 9) - i * .35) % 3) < 1.6; m.material.emissiveIntensity = on ? 1.6 + hov * 2.5 : .15; }); }
     if (screenCtx && T - lastDraw > 1 / 20) { drawScreen(T); lastDraw = T; }
     // race: rolling road, spinning wheels, the two other cars trading places
     const race = O.env && P.racers && e > .4 && !reduce;
@@ -1166,6 +1186,13 @@ function animate(name, O, c, dt, a) {
       P.racers.slice(1).forEach(r => { r.obj.position.z = r.base.z + Math.sin(T * .35 + r.ph) * 900; r.obj.position.x = r.base.x + Math.sin(T * .5 + r.ph) * 250; });
     }
     P.wheel.userData.leds.forEach((m, i) => { const v = (Math.sin(T * 3 - i * .55) + 1) / 2; m.emissive.setHex(i < 3 ? 0x2fd36b : i < 7 ? 0xff3030 : 0x8a5cff).multiplyScalar(v > .5 ? 1 : .04); });
+  }
+  if (name === 'ripple') {
+    const t0 = window.__introEnd ?? 0, A = reduce ? 1 : Math.max(0, (performance.now() - t0) / 1700);
+    const ex = c.ex || 0, exE = ex * ex * (3 - 2 * ex);
+    for (const pt of P.parts) { const k = Math.min(1, Math.max(0, (A - pt.delay) / .45)), drop = 1 - (1 - k) * (1 - k) * (1 - k);
+      pt.o.position.y = (1 - drop) * 60 + exE * (6 + pt.top * 2.2); pt.o.visible = A > pt.delay - .02; }
+    labelsFor = ex > .35 ? O : (labelsFor === O ? null : labelsFor);
   }
   if (name === 'rocket') {
     const per = 7, t = reduce ? 2 : T % per;
@@ -1188,11 +1215,52 @@ function animate(name, O, c, dt, a) {
     P.edgeMat.opacity = a * .5 * ease;
     P.modPivot.position.set(16 + 46 * ease, -6 + 6 * ease, -4);
     P.motor.position.set(-9 - 8 * ease, 7 + 46 * ease, 2.5); P.motor.rotation.x = .25 * ease;
-    P.massPivot.rotation.z += reduce ? 0 : dt * 38;
+    P.massPivot.rotation.z += reduce ? 0 : dt * (absUntil > T ? 90 : 38);
+    const home = (P.housingG.userData.home ??= P.housingG.position.clone());
+    const absOn = absUntil > T && !reduce, pulse = absOn && Math.sin(T * PI * 2 * 12) > 0, amp = absOn ? (pulse ? .9 : .25) : 0;
+    P.housingG.position.set(home.x + Math.sin(T * 97) * amp, home.y + Math.cos(T * 83) * amp, home.z + Math.sin(T * 71) * amp);
     P.decal.visible = e < .5;
     if (O.content.userData.loaded && Math.abs(e - lastCableE) > .003) { rebuildCable(O.content.userData); lastCableE = e; }
   }
 }
+
+let labelsFor = null; const labelBox = document.getElementById('labels'); const labelEls = [];
+function drawLabels() {
+  if (!labelBox) return;
+  if (!labelsFor || !labelsFor.holder.visible) { labelBox.classList.remove('on'); return; }
+  const ud = labelsFor.content.userData, pcb = ud.parts.pcb; labelBox.classList.add('on');
+  const ex = labelsFor.cur.ex || 0, exE = ex * ex * (3 - 2 * ex), rect = canvas.getBoundingClientRect();
+  const pts = ud.labels.map((L, i) => { const v = pcb.localToWorld(new THREE.Vector3(L.x, 1.6 + L.h + exE * (6 + (1.6 + L.h) * 2.2), L.z)).project(camera); return { i, L, x: (v.x * .5 + .5) * rect.width + rect.left, y: (-v.y * .5 + .5) * rect.height + rect.top }; });
+  const ys = pts.map(p => p.y), cy = ys.reduce((a, b) => a + b, 0) / ys.length, minX = Math.min(...pts.map(p => p.x));
+  pts.sort((a, b) => a.y - b.y).forEach((p, k) => {
+    let el = labelEls[p.i]; if (!el) { el = document.createElement('div'); el.className = 'lbl3d'; el.innerHTML = '<i></i><b></b><span></span>'; labelBox.appendChild(el); labelEls[p.i] = el; }
+    el.querySelector('span').textContent = p.L.t;
+    const tx = minX - 70 - p.x, ty = cy + (k - (pts.length - 1) / 2) * 42 - p.y, len = Math.hypot(tx, ty), ang = Math.atan2(ty, tx);
+    el.style.transform = `translate(${p.x}px, ${p.y}px)`;
+    const line = el.querySelector('b'); line.style.width = len + 'px'; line.style.transform = `rotate(${ang}rad)`;
+    const sp = el.querySelector('span'); sp.style.transform = `translate(calc(${tx}px - 100%), calc(${ty}px - 50%))`;
+    el.style.opacity = Math.max(0, Math.min(1, (ex - .35) / .5));
+  });
+}
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(); let pressT = 0, pressed = null, userPage = null, userPageUntil = 0;
+drag.addEventListener('pointerup', e => {
+  if (Math.abs(e.clientX - sx0) + Math.abs(e.clientY - sy0) > 6) return;
+  const fe = objects.fe; if (!BEATS[active]?.fe || !fe.content.userData.parts.buttons) return;
+  const r = canvas.getBoundingClientRect(); ndc.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+  ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(fe.content.userData.parts.buttons, false)[0];
+  if (hit) { pressed = hit.object; pressT = T; const pages = [0, 2, 3]; userPage = pages[(pages.indexOf(userPage ?? screenMode) + 1) % 3]; userPageUntil = T + 6; needs = true; }
+});
+let absUntil = 0, audioCtx = null;
+document.getElementById('btnAbs')?.addEventListener('click', () => {
+  absUntil = T + 2.6; needs = true;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = audioCtx.currentTime, o = audioCtx.createOscillator(), g = audioCtx.createGain(), lfo = audioCtx.createOscillator(), lg = audioCtx.createGain(), f = audioCtx.createBiquadFilter();
+    o.type = 'sawtooth'; o.frequency.value = 95; lfo.type = 'square'; lfo.frequency.value = 12; lg.gain.value = .05; f.type = 'lowpass'; f.frequency.value = 420;
+    g.gain.setValueAtTime(.06, t); g.gain.setTargetAtTime(0, t + 2.4, .05); lfo.connect(lg); lg.connect(g.gain);
+    o.connect(f); f.connect(g); g.connect(audioCtx.destination); o.start(t); lfo.start(t); o.stop(t + 2.7); lfo.stop(t + 2.7);
+  } catch (err) { }
+});
 
 function drawScope(dt) {
   if (scope.hidden) return;

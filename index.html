@@ -80,7 +80,7 @@ strong{font-weight:600;color:var(--ink)}
 .hero .inner{width:100%}
 .hero-text{max-width:620px;display:grid;gap:24px}
 .hero h1{font-size:clamp(64px,9.4vw,150px)}
-.hero h1 span{color:var(--red)}
+.hero h1 .red{color:var(--red);font-style:normal}
 .hero .role{font:700 clamp(20px,1.9vw,26px)/1.2 var(--f-display);font-stretch:105%;letter-spacing:-.01em;max-width:24ch}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
 .facts li{font:500 13px/1 var(--f-body);background:var(--sheet);border:1px solid var(--line);padding:9px 12px;border-radius:999px;color:var(--ink-2)}
@@ -254,6 +254,32 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
 .rv{transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity .9s}
 .rv.pre{transform:translateY(26px);opacity:.2}
 
+/* intro */
+#intro{position:fixed;inset:0;z-index:100;background:#0b0d10;display:grid;place-items:center;transition:clip-path .9s cubic-bezier(.7,0,.2,1),opacity .3s .8s}
+#intro canvas{position:absolute;inset:0;width:100%;height:100%}
+#intro .who{position:relative;text-align:center;color:#fff;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .8s cubic-bezier(.2,.7,.2,1)}
+#intro .who.on{opacity:1;transform:none}
+#intro .who b{display:block;font:900 clamp(44px,8vw,110px)/.9 var(--f-display);font-stretch:115%;letter-spacing:-.03em;text-transform:uppercase}
+#intro .who b span{color:var(--red)}
+#intro .who small{display:block;margin-top:14px;font:500 12px/1 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:#9aa3ad}
+#intro .skip{position:absolute;right:max(20px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));appearance:none;background:transparent;border:1px solid #3a4048;color:#c9cdd3;font:500 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;padding:10px 14px;border-radius:999px;cursor:pointer}
+#intro .skip:hover{border-color:#fff;color:#fff}
+#intro.out{clip-path:circle(0% at 70% 50%);pointer-events:none}
+#intro.gone{display:none}
+/* letters */
+.split .ch{display:inline-block;transform:translateY(105%) rotate(6deg);opacity:0;transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .5s}
+.split .wd{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.04em}
+.split.on .ch{transform:none;opacity:1}
+/* exploded-view labels */
+#labels{position:fixed;inset:0;z-index:5;pointer-events:none;opacity:0;transition:opacity .4s}
+#labels.on{opacity:1}
+.lbl3d{position:absolute;left:0;top:0;will-change:transform}
+.lbl3d i{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(226,6,28,.25);left:-4px;top:-4px;z-index:1}
+.lbl3d b{position:absolute;left:0;top:0;height:1.5px;background:var(--ink);transform-origin:0 50%}
+.lbl3d span{position:absolute;left:-8px;top:0;font:600 12px/1 var(--f-mono);background:rgba(15,17,20,.9);color:#fff;padding:7px 9px;border-radius:3px;white-space:nowrap}
+.btn-abs{display:inline-flex;align-items:center;gap:10px}
+.btn-abs::before{content:"";width:8px;height:8px;border-radius:50%;background:#ffcf33;box-shadow:0 0 0 3px rgba(255,207,51,.3)}
+.wheel-hint{font:500 12px/1.4 var(--f-mono);color:var(--ink-3)}
 @media (max-width:1000px){
   .timeline li{grid-template-columns:90px minmax(0,1fr);gap:6px 18px}
   .timeline .kind{grid-column:2;grid-row:1}
@@ -303,7 +329,9 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
 
 
 <div class="sheet-bg" aria-hidden="true"></div>
+<div id="intro" aria-hidden="true"><canvas id="introCv"></canvas><div class="who" id="introWho"><b>Julien <span>Carro</span></b><small>Électronique · Embarqué · Puissance</small></div><button class="skip" type="button" id="introSkip">Passer l'intro</button></div>
 <canvas id="gl" aria-hidden="true"></canvas>
+<div id="labels" aria-hidden="true"></div>
 <div class="envfade" aria-hidden="true"></div>
 <div class="dragzone" id="drag" aria-hidden="true"></div>
 <div class="progress" id="progress"></div>
@@ -330,7 +358,7 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
     <div class="inner">
       <div class="hero-text">
         <p class="eyebrow">Ingénieur électronique &amp; systèmes embarqués</p>
-        <h1 class="disp">Julien<br><span>Carro</span></h1>
+        <h1 class="disp split" id="heroTitle">Julien<br><em class="red">Carro</em></h1>
         <p class="role">Je conçois la carte, puis j'écris le firmware qui tourne dessus.</p>
         <p class="lede">Diplômé de l'ECE Paris en 2026. Quatre stages industriels en Suisse et en France : électronique de puissance chez Sonceboz, réseau CAN d'une Formula E chez Stellantis Motorsport, refonte d'une carte en fin de vie chez SECAD.</p>
         <ul class="facts">
@@ -431,6 +459,7 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
         </div>
         <div class="beat" data-beat="st-1"><div class="card rv">
           <p class="k">250 signaux, 188 canaux</p>
+          <p class="wheel-hint">Astuce : cliquez sur un bouton du volant pour changer la page de l'écran.</p>
           <div class="kpi"><span class="v num">250<small>+</small></span><span class="u">signaux à afficher sur 18 pages pilote, avec un écran limité à 188 canaux</span></div>
           <p>J'ai regroupé des informations dans des signaux codés sur plusieurs bits, puis je les ai décodés bit à bit dans la configuration de l'écran. Toutes les fonctions utiles ont été conservées.</p>
           <div class="panel"><div class="panel-h"><b>Un signal, plusieurs informations</b><span>décodage bit à bit</span></div><svg id="bits" viewBox="0 0 560 150" role="img" aria-label="Exemple de signal de 16 bits découpé en plusieurs champs"></svg></div>
@@ -585,6 +614,7 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
           <p class="k">Le produit</p>
           <h3>Un module vibrant sous chaque pédale</h3>
           <p>Un boîtier noir fixé sur le bras de la pédale contient un moteur à balourd et sa carte. Un câble 3 fils relie sa prise JST à la carte de commande posée à côté du pédalier.</p>
+          <button class="btn btn-abs" type="button" id="btnAbs">Tester l'ABS (avec le son)</button>
         </div></div>
         <div class="beat" data-beat="sf-2"><div class="card rv">
           <p class="k">Vue éclatée</p>
@@ -694,6 +724,45 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
     links.forEach((a,i)=>a.classList.toggle('on',i===on));
   }
   addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  // ---- letters: wrap each character, reveal on view
+  function split(el){ const walk=n=>{ [...n.childNodes].forEach(c=>{ if(c.nodeType===3){ const f=document.createDocumentFragment(); c.textContent.split(/(\s+)/).forEach(w=>{ if(!w) return; if(/^\s+$/.test(w)){ f.appendChild(document.createTextNode(w)); return;} const wd=document.createElement('span'); wd.className='wd'; [...w].forEach((ch,i)=>{ const s=document.createElement('span'); s.className='ch'; s.textContent=ch; s.style.transitionDelay=(i*0.035)+'s'; wd.appendChild(s); }); f.appendChild(wd); }); n.replaceChild(f,c);} else if(c.nodeType===1 && c.tagName!=='BR') walk(c); }); }; walk(el); }
+  const heads=[document.getElementById('heroTitle'),...document.querySelectorAll('h2.disp')];
+  if(!reduce){ heads.forEach(h=>{ h.classList.add('split'); split(h); });
+    const io2=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting && e.target.id!=='heroTitle'){ e.target.classList.add('on'); io2.unobserve(e.target);} }),{rootMargin:'0px 0px -10% 0px'});
+    heads.forEach(h=>{ if(h.id!=='heroTitle') io2.observe(h); });
+    window.__revealHero=()=>document.getElementById('heroTitle').classList.add('on');
+  } else { heads.forEach(h=>h.classList.add('on')); window.__revealHero=()=>{}; }
+  // ---- counters: key figures count up the first time they come into view
+  if(!reduce && 'IntersectionObserver' in window){
+    const nums=[...document.querySelectorAll('.stats .big, .kpi .v')].filter(el=>/^\d/.test(el.firstChild?.textContent||''));
+    const io3=new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) return; io3.unobserve(e.target); const tn=e.target.firstChild, raw=tn.textContent, end=parseFloat(raw.replace(',','.')), dec=(raw.split(/[.,]/)[1]||'').length, t0=performance.now(), d=1300;
+      const step=t=>{ const k=Math.min(1,(t-t0)/d), v=end*(1-Math.pow(1-k,3)); tn.textContent=(end>=1000&&end<3000)?String(Math.round(2000+(end-2000)*(1-Math.pow(1-k,3)))):v.toFixed(dec).replace('.',','); if(k<1) requestAnimationFrame(step); else tn.textContent=raw; }; requestAnimationFrame(step); }),{threshold:.6});
+    nums.forEach(n=>io3.observe(n));
+  }
+  // ---- intro: copper traces drawn across a dark board, then the page opens
+  (function(){
+    const box=document.getElementById('intro'), cv=document.getElementById('introCv'), who=document.getElementById('introWho');
+    let seen=false; try{ seen=sessionStorage.getItem('jc-intro')==='1'; }catch(e){}
+    const finish=()=>{ if(box.classList.contains('out')) return; window.__introEnd=performance.now(); box.classList.add('out'); window.__revealHero(); setTimeout(()=>box.classList.add('gone'),1000); try{ sessionStorage.setItem('jc-intro','1'); }catch(e){} };
+    document.getElementById('introSkip').addEventListener('click',finish);
+    if(reduce||seen){ box.classList.add('gone'); window.__introEnd=performance.now()-5000; window.__revealHero(); return; }
+    const g=cv.getContext('2d'), dpr=Math.min(2,devicePixelRatio||1); let W,H; const size=()=>{ W=cv.width=innerWidth*dpr; H=cv.height=innerHeight*dpr; }; size();
+    const pitch=26*dpr, traces=[], rnd=(()=>{ let a=7; return ()=>{ a=(a*16807)%2147483647; return a/2147483647; }; })();
+    for(let i=0;i<34;i++){ let x=-20, y=Math.round(rnd()*H/pitch)*pitch; const pts=[[x,y]]; while(x<W+40){ x+=pitch*(2+Math.floor(rnd()*5)); pts.push([x,y]); if(rnd()<.55){ const dy=(rnd()<.5?-1:1)*pitch*(1+Math.floor(rnd()*2)); x+=Math.abs(dy); y+=dy; pts.push([x,y]); } } traces.push({pts,delay:rnd()*.35,w:(rnd()<.2?3:1.6)*dpr}); }
+    const pads=[]; for(let i=0;i<40;i++) pads.push([Math.round(rnd()*W/pitch)*pitch, Math.round(rnd()*H/pitch)*pitch, rnd()]);
+    const dur=innerWidth<820?1400:2100, t0=performance.now();
+    const len=p=>{ let L=0; for(let i=1;i<p.length;i++) L+=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]); return L; };
+    traces.forEach(t=>t.L=len(t.pts));
+    function frame(){ const t=performance.now(), k=Math.min(1,(t-t0)/dur); g.clearRect(0,0,W,H);
+      g.fillStyle='rgba(255,255,255,.035)'; for(let x=pitch/2;x<W;x+=pitch) for(let y=pitch/2;y<H;y+=pitch) g.fillRect(x,y,1.2*dpr,1.2*dpr);
+      traces.forEach(tr=>{ const p=Math.max(0,Math.min(1,(k-tr.delay)/(.75))); if(p<=0) return; let rem=tr.L*p; g.strokeStyle='#c8873f'; g.lineWidth=tr.w; g.lineJoin='round'; g.beginPath(); g.moveTo(...tr.pts[0]); let last=tr.pts[0];
+        for(let i=1;i<tr.pts.length&&rem>0;i++){ const a=tr.pts[i-1], b=tr.pts[i], s=Math.hypot(b[0]-a[0],b[1]-a[1]); if(rem>=s){ g.lineTo(...b); last=b; rem-=s; } else { last=[a[0]+(b[0]-a[0])*rem/s,a[1]+(b[1]-a[1])*rem/s]; g.lineTo(...last); rem=0; } }
+        g.stroke(); if(p<1){ g.fillStyle='#ffd9a8'; g.beginPath(); g.arc(last[0],last[1],3*dpr,0,7); g.fill(); g.fillStyle='rgba(255,180,90,.25)'; g.beginPath(); g.arc(last[0],last[1],10*dpr,0,7); g.fill(); } });
+      pads.forEach(([x,y,d])=>{ if(k>d*.8+.15){ g.fillStyle='#d9dcdf'; g.beginPath(); g.arc(x,y,4*dpr,0,7); g.fill(); g.fillStyle='#0b0d10'; g.beginPath(); g.arc(x,y,1.6*dpr,0,7); g.fill(); } });
+      if(k>.45) who.classList.add('on');
+      if(k<1) requestAnimationFrame(frame); else setTimeout(finish,innerWidth<820?250:550); }
+    requestAnimationFrame(frame);
+  })();
   document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>{
     const done=t=>{b.textContent=t;setTimeout(()=>b.textContent='Copier',1600)};
     const fallback=()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('mail'));const s=getSelection();s.removeAllRanges();s.addRange(r);done('Sélectionné')};
