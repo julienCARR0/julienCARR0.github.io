@@ -25,7 +25,7 @@ const fill = new THREE.DirectionalLight(0xffffff, 0.6); fill.position.set(6, 3, 
 scene.add(new THREE.HemisphereLight(0xffffff, 0xdfe2e6, 0.5));
 
 const camera = new THREE.PerspectiveCamera(26, 1, 0.05, 4000);
-scene.fog = new THREE.Fog(0xffffff, 1e4, 2e4);
+scene.fog = null; // no fog: every scene is shown whole and sharp
 camera.position.set(0, 3.9, 9.6); camera.lookAt(0, 0, 0);
 
 /* ================= helpers ================= */
@@ -1034,8 +1034,8 @@ const BEATS = {
   'st-2':     { fe: B({ ry: PI - .35, s: 1.05, screen: 1 }) },
   'st-3':     { fe: B({ ry: PI + .12, s: 1.1, screen: 3 }) },
   'st-4':     { fe: B({ ry: PI - .95, s: 1.05, e: 1, spin: .03, screen: 0 }) },
-  'pr-intro': { rocket: B({ ry: .5, s: .9, spin: .05 }) },
-  'rk-1':     { rocket: B({ ry: .3, rx: .05, s: 1 }) },
+  'pr-intro': { rocket: B({ ry: .5, rx: -.42, s: .9, spin: .05 }) },
+  'rk-1':     { rocket: B({ ry: .3, rx: -.42, s: 1 }) },
   'fs-1':     { ads: B({ ry: -.7, s: 1, spin: .02 }) },
   'fs-2':     { ads: B({ ry: .5, rx: .2, s: .5 }) },
   'sf-intro': { simfeel: B({ ry: -.65, s: .78, spin: .02, f: [0.4, 1.4, 1] }) },
@@ -1095,8 +1095,18 @@ addEventListener('pointerup', endDrag); addEventListener('pointercancel', endDra
 
 /* ================= layout & loop ================= */
 let mobile = false, needs = true, last = performance.now(), T = 0;
+// on desktop the 3D lives in a framed panel aligned with the right-hand column
+function placePanel() {
+  const st = document.querySelector('.ch-stage'), drag2 = document.getElementById('drag'), hud2 = document.getElementById('hud');
+  if (mobile || !st) { for (const el of [canvas, drag2]) { el.style.left = el.style.top = el.style.width = el.style.height = el.style.right = el.style.bottom = ''; } hud2.style.right = hud2.style.bottom = ''; return; }
+  const r0 = st.getBoundingClientRect(), nav = 64, top = nav + 22, bottom = 22, right = 24, r = { left: r0.left - 12, width: innerWidth - right - (r0.left - 12) };
+  canvas.style.left = r.left + 'px'; canvas.style.top = top + 'px'; canvas.style.width = r.width + 'px'; canvas.style.height = (innerHeight - top - bottom) + 'px';
+  Object.assign(drag2.style, { left: r.left + 'px', top: top + 'px', width: r.width + 'px', height: (innerHeight - top - bottom) + 'px', right: 'auto', bottom: 'auto' });
+  hud2.style.right = (right + 14) + 'px'; hud2.style.bottom = (bottom + 14) + 'px';
+}
 function resize() {
   mobile = innerWidth < 820;
+  placePanel();
   const w = canvas.clientWidth, h = canvas.clientHeight;
   renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.6 : 1.75));
   renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); needs = true;
@@ -1114,7 +1124,7 @@ function frame(now) {
   const k = reduce ? 1 : 1 - Math.exp(-dt * 3.0);
   if (!dragging && now - lastInteract > 2200) { const kk = 1 - Math.exp(-dt * 1.2); uYaw = damp(uYaw, 0, kk); uPitch = damp(uPitch, 0, kk); }
   const dist = camera.position.length(), halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * dist, halfW = halfH * camera.aspect;
-  const fit = mobile ? Math.min(halfW * .9, halfH * .82) : Math.min(halfW * .46, halfH * .72);
+  const fit = Math.min(halfW * .86, halfH * .78);
   let any = false, lead = null, leadW = 0, leadR = 2;
   let fogW = 0, fogCol = null;
   for (const name in objects) {
@@ -1132,7 +1142,7 @@ function frame(now) {
     const f = ud.focusFn ? ud.focusFn(c) : new THREE.Vector3(c.fx, c.fy, c.fz);
     const leaving = !tgt, tw2 = 1 - c.w, eio = tw2 * tw2;
     const sc = fit / radius * c.s * (leaving ? 1 + .55 * eio : .7 + .3 * c.w);
-    const envLow = O.env && name !== 'fe' ? .2 : 0; const ax = mobile ? 0 : c.ax, ay = (mobile ? -.02 : -.04) - envLow * (1 - Math.min(1, (c.s - 1) / 1.2));
+    const envLow = O.env && name !== 'fe' ? .2 : 0; const ax = 0, ay = (mobile ? -.02 : -.04) - envLow * (1 - Math.min(1, (c.s - 1) / 1.2));
     const pos = new THREE.Vector3().addScaledVector(right, ax * halfW).addScaledVector(upv, ay * halfH);
     if (leaving) pos.addScaledVector(right, -eio * halfW * .55).addScaledVector(upv, eio * halfH * .15); else pos.addScaledVector(upv, -tw2 * halfH * .3);
     pos.y += reduce ? 0 : Math.sin(T * .8) * .03;
@@ -1158,7 +1168,6 @@ function frame(now) {
     key.target.position.copy(lead.holder.position); key.target.updateMatrixWorld();
     const cam = key.shadow.camera; if (Math.abs(cam.right - R) > .01) { cam.left = -R; cam.right = R; cam.top = R; cam.bottom = -R; cam.near = .5; cam.far = 40; cam.updateProjectionMatrix(); }
   }
-  if (fogCol !== null) { scene.fog.color.setHex(fogCol[0]); scene.fog.near = fogCol[1]; scene.fog.far = fogCol[2]; } else { scene.fog.near = 1e4; scene.fog.far = 2e4; }
   drawScope(dt); drawLabels();
   if (any || needs) { renderer.render(scene, camera); needs = any; }
 }
@@ -1235,7 +1244,7 @@ function drawLabels() {
   pts.sort((a, b) => a.y - b.y).forEach((p, k) => {
     let el = labelEls[p.i]; if (!el) { el = document.createElement('div'); el.className = 'lbl3d'; el.innerHTML = '<i></i><b></b><span></span>'; labelBox.appendChild(el); labelEls[p.i] = el; }
     el.querySelector('span').textContent = p.L.t;
-    const tx = minX - 70 - p.x, ty = cy + (k - (pts.length - 1) / 2) * 42 - p.y, len = Math.hypot(tx, ty), ang = Math.atan2(ty, tx);
+    const tx = Math.max(minX - 70, rect.left + 200) - p.x, ty = cy + (k - (pts.length - 1) / 2) * 42 - p.y, len = Math.hypot(tx, ty), ang = Math.atan2(ty, tx);
     el.style.transform = `translate(${p.x}px, ${p.y}px)`;
     const line = el.querySelector('b'); line.style.width = len + 'px'; line.style.transform = `rotate(${ang}rad)`;
     const sp = el.querySelector('span'); sp.style.transform = `translate(calc(${tx}px - 100%), calc(${ty}px - 50%))`;
