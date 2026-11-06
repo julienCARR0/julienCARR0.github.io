@@ -16,7 +16,7 @@
   --sheet:#ffffff;      /* cards and panels */
   --ink:#0f1114;        /* main text */
   --ink-2:#4b5059;      /* secondary text */
-  --ink-3:#8a9099;      /* captions */
+  --ink-3:#5f656f;      /* captions, AA (≥5:1) on paper and white */
   --line:#e4e0da;       /* hairlines */
   --acc:#e2061c;        /* chapter accent, redefined per chapter */
   --acc-ink:#b80416;
@@ -37,6 +37,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 ::selection{background:var(--red);color:#fff}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.contact :focus-visible{outline-color:#fff}
+.sr-only{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:fixed;left:12px;top:-60px;z-index:40;background:var(--ink);color:#fff;padding:12px 18px;border-radius:999px;font:600 14px/1 var(--f-body);text-decoration:none;transition:top .2s}
+.skip:focus{top:calc(10px + env(safe-area-inset-top,0px))}
 img{max-width:100%;display:block}
 
 /* millimetre sheet behind everything */
@@ -78,8 +82,14 @@ main,footer{position:relative;z-index:2}
 .nav ul a{display:block;font:500 13px/1 var(--f-body);text-decoration:none;color:var(--ink-2);padding:9px 12px;border-radius:999px;transition:color .2s,background .2s}
 .nav ul a:hover{color:var(--ink);background:rgba(15,17,20,.05)}
 .nav ul a.on{color:#fff;background:var(--ink)}
-.nav .cta{font:600 13px/1 var(--f-body);text-decoration:none;color:#fff;background:var(--red);padding:11px 16px;border-radius:999px}
-.nav .cta:hover{background:var(--red-ink)}
+.nav .cta{display:inline-flex;align-items:center;min-height:44px;font:600 13px/1 var(--f-body);text-decoration:none;color:#fff;background:var(--red-ink);padding:0 18px;border-radius:999px}
+.nav .cta:hover{background:#8f0310}
+.nav-right{display:flex;align-items:center;gap:8px}
+.menu-btn{display:none;appearance:none;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid var(--line);background:var(--sheet);border-radius:50%;cursor:pointer;color:var(--ink);padding:0}
+.menu-btn svg{width:20px;height:20px}
+.menu-btn .x{display:none}
+.nav.open .menu-btn .x{display:block}.nav.open .menu-btn .b{display:none}
+.nav ul a[aria-current="true"]{color:#fff;background:var(--ink)}
 .progress{position:fixed;top:calc(env(safe-area-inset-top,0px) + var(--nav));left:0;height:2px;width:100%;transform-origin:0 0;transform:scaleX(0);background:var(--red);z-index:21}
 
 /* type */
@@ -176,8 +186,8 @@ strong{font-weight:600;color:var(--ink)}
 .legend{display:flex;flex-wrap:wrap;gap:14px;font:500 12px/1 var(--f-mono);color:var(--ink-2)}
 .legend span::before{content:"";display:inline-block;width:14px;height:3px;margin-right:6px;vertical-align:3px;background:currentColor}
 .legend .a{color:var(--ink-3)} .legend .b{color:var(--red-ink)}
-.btn{appearance:none;font:600 13px/1 var(--f-body);background:var(--ink);color:#fff;border:0;padding:12px 16px;border-radius:999px;cursor:pointer;justify-self:start}
-.btn:hover{background:var(--red)}
+.btn{appearance:none;font:600 13px/1 var(--f-body);background:var(--ink);color:#fff;border:0;min-height:44px;padding:0 20px;border-radius:999px;cursor:pointer;justify-self:start}
+.btn:hover{background:var(--red-ink)}
 .photo{margin:0;display:grid;gap:8px}
 .photo img{border-radius:4px;border:1px solid var(--line);width:100%;height:auto;aspect-ratio:760/806;object-fit:cover}
 .photo figcaption{font:400 12px/1.4 var(--f-mono);color:var(--ink-3)}
@@ -245,7 +255,7 @@ strong{font-weight:600;color:var(--ink)}
 .skills td.src{font:500 12px/1.5 var(--f-mono);color:var(--red-ink);width:17%}
 .tools{margin-top:14px;display:grid;grid-template-columns:2fr 1fr;gap:14px}
 .tools>div{background:var(--sheet);border:1px solid var(--line);border-radius:4px;padding:22px}
-.tools h4{font:500 11px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--red-ink);margin:0 0 12px}
+.tools h3{font:500 11px/1 var(--f-mono);font-stretch:100%;letter-spacing:.12em;text-transform:uppercase;color:var(--red-ink);margin:0 0 12px}
 .lang{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .lang li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px}
 .lang li:last-child{border-bottom:0;padding-bottom:0}
@@ -257,23 +267,28 @@ strong{font-weight:600;color:var(--ink)}
 .quote-src{font:500 12px/1.4 var(--f-mono);color:var(--ink-3);margin-top:16px}
 .motiv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:56px}
 .motiv-grid>div{background:var(--sheet);border:1px solid var(--line);border-radius:4px;padding:26px}
-.motiv-grid h4{font:800 20px/1.1 var(--f-display);font-stretch:108%;margin:0 0 10px}
+.motiv-grid h3{font:800 20px/1.1 var(--f-display);font-stretch:108%;margin:0 0 10px}
 .motiv-grid p{color:var(--ink-2);font-size:15.5px}
 
 /* contact: the one red band */
-.contact{background:linear-gradient(120deg,#e2061c 0%,#ff4d3a 45%,#ff8a3d 100%);color:#fff;padding-block:120px 90px;margin-top:100px}
+.contact{background:linear-gradient(120deg,#c8051a 0%,#d62a1c 45%,#c94a08 100%);color:#fff;padding-block:120px 90px;margin-top:100px}
 .contact .eyebrow{color:#fff}
 .contact .eyebrow::before{background:#fff}
 .contact h2{font-size:clamp(56px,9vw,140px);margin-top:16px}
 .contact-rows{margin-top:44px;display:grid;border-top:1px solid rgba(255,255,255,.35);max-width:820px}
 .crow{display:grid;grid-template-columns:140px minmax(0,1fr) auto;gap:16px;align-items:center;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.35)}
-.crow .k{font:500 11px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+.crow .k{font:500 11px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:#fff}
 .crow .v{font:600 clamp(17px,2vw,22px)/1.3 var(--f-body);overflow-wrap:anywhere}
 .crow a.v{text-decoration:none}
 .crow a.v:hover{text-decoration:underline}
-.copy{appearance:none;background:#fff;border:0;color:var(--red-ink);font:600 12px/1 var(--f-body);padding:10px 14px;cursor:pointer;border-radius:999px}
+.copy{appearance:none;background:#fff;border:0;color:var(--red-ink);font:600 13px/1 var(--f-body);min-height:44px;min-width:92px;padding:0 18px;cursor:pointer;border-radius:999px}
+.copy:hover{background:#ffe9ea}
 footer{padding-block:28px 40px;background:var(--ink);color:#c9cdd3}
 footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
+footer a{color:#fff}
+footer details{margin-top:10px}
+footer summary{cursor:pointer;font:500 12px/1.6 var(--f-mono);color:#fff;width:max-content;padding:6px 0}
+footer details p{margin-top:8px}
 
 .rv{transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity .9s}
 .rv.pre{transform:translateY(26px);opacity:.2}
@@ -302,6 +317,9 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
 }
 @media (max-width:820px){
   .nav ul{display:none}
+  .menu-btn{display:inline-flex}
+  .nav.open ul{display:grid;position:absolute;top:100%;left:0;right:0;gap:2px;padding:10px max(16px,env(safe-area-inset-left,0px)) 16px;background:rgba(255,255,255,.98);border-bottom:1px solid var(--line);box-shadow:0 30px 40px -30px rgba(15,17,20,.35)}
+  .nav.open ul a{font-size:16px;padding:14px 12px;border-radius:10px}
   .ch-grid{grid-template-columns:minmax(0,1fr);gap:0}
   .ch-stage{order:-1;position:sticky;top:var(--nav);height:44vh;z-index:3;background:var(--paper);margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));border-bottom:1px solid var(--line)}
   .ch-stage .viz{padding:12px 16px;justify-content:center}
@@ -333,25 +351,28 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .rv,.rv.pre{transition:none;transform:none;opacity:1}
-  .viz{transition:none}
+  .viz,.skip,.stats li,.timeline::before,.hud{transition:none}
+  .stats li:hover{transform:none}
+  .spot{display:none}
 }
 </style>
 </head>
 <body>
 
 
+<a class="skip" href="#parcours">Aller au contenu</a>
 <div class="sheet-bg" aria-hidden="true"></div>
 <div class="spot" aria-hidden="true"></div>
 <canvas id="gl" aria-hidden="true"></canvas>
 <div id="labels" aria-hidden="true"></div>
 <div class="dragzone" id="drag" aria-hidden="true"></div>
-<div class="progress" id="progress"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
 <div class="hud off" id="hud" aria-live="polite"><canvas id="scope" width="440" height="128" hidden></canvas><div class="cap" id="cap"></div></div>
 
 <header class="nav wrap">
   <div class="inner">
     <a class="mark" href="#top"><i aria-hidden="true"></i>Julien Carro</a>
-    <nav aria-label="Sections"><ul>
+    <nav aria-label="Sections" id="menu"><ul>
       <li><a href="#parcours">Parcours</a></li>
       <li><a href="#sonceboz">Sonceboz</a></li>
       <li><a href="#stellantis">Stellantis</a></li>
@@ -359,7 +380,10 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
       <li><a href="#projets">Projets</a></li>
       <li><a href="#competences">Compétences</a></li>
     </ul></nav>
-    <a class="cta" href="#contact">Me contacter</a>
+    <div class="nav-right">
+      <a class="cta" href="#contact">Me contacter</a>
+      <button class="menu-btn" type="button" id="menuBtn" aria-controls="menu" aria-expanded="false" aria-label="Menu"><svg class="b" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
   </div>
 </header>
 
@@ -403,12 +427,12 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
         <p class="lede">Un BUT pour les bases de l'électronique, un cycle ingénieur pour l'embarqué, et des stages dans des secteurs où une carte n'a pas le droit de lâcher.</p>
       </div>
       <ol class="timeline rv">
-        <li><span class="yr num">2021–23</span><span class="kind">Formation</span><div class="what"><img class="tl-logo" src="img/logos/iut.png" alt="Logo IUT Lyon 1" loading="lazy"><b>IUT Lyon 1 · BUT GEII</b><p>Électronique analogique, numérique et de puissance, CEM, automatisme, réseaux. Deux ans, puis admission en cycle ingénieur à l'ECE.</p></div></li>
-        <li><span class="yr num">2023</span><span class="kind xp">Stage</span><div class="what"><img class="tl-logo" src="img/logos/secad.png" alt="Logo SECAD" loading="lazy"><b>SECAD SA · Saint-Martin-du-Fresne</b><p>Premier stage sur une carte de contrôle de dosage agricole menacée par l'obsolescence de ses composants.</p></div></li>
-        <li><span class="yr num">2023–26</span><span class="kind">Formation</span><div class="what"><img class="tl-logo" src="img/logos/ece.png" alt="Logo ECE Paris" loading="lazy"><b>ECE Paris · Diplôme d'ingénieur, majeure Systèmes embarqués</b><p>Grade master. C/C++ temps réel, bus de communication, FPGA/VHDL, PCB, MBSE. Semestre d'échange à Londres.</p></div></li>
-        <li><span class="yr num">2024</span><span class="kind xp">Stage</span><div class="what"><img class="tl-logo" src="img/logos/secad.png" alt="Logo SECAD" loading="lazy"><b>SECAD SA · réembauché</b><p>Deuxième stage sur la même carte client, jusqu'au prototype validé.</p></div></li>
-        <li><span class="yr num">2025</span><span class="kind xp">Stage</span><div class="what"><img class="tl-logo" src="img/logos/stellantis.png" alt="Logo Stellantis Motorsport" loading="lazy"><b>Stellantis Motorsport · Formula E</b><p>Équipe systèmes, Versailles-Satory : intégration CAN et débogage du volant de la monoplace GEN4.</p></div></li>
-        <li><span class="yr num">2026</span><span class="kind xp">Stage de fin d'études</span><div class="what"><img class="tl-logo" src="img/logos/sonceboz.png" alt="Logo Sonceboz" loading="lazy"><b>Sonceboz SA · Boncourt, Suisse</b><p>Laboratoire électronique véhicules commerciaux, environnement IATF 16949 : bancs de qualification de condensateurs.</p></div></li>
+        <li><span class="yr num">2021–23</span><span class="kind">Formation</span><div class="what"><img class="tl-logo" src="img/logos/iut.png" alt="" loading="lazy"><b>IUT Lyon 1 · BUT GEII</b><p>Électronique analogique, numérique et de puissance, CEM, automatisme, réseaux. Deux ans, puis admission en cycle ingénieur à l'ECE.</p></div></li>
+        <li><span class="yr num">2023</span><span class="kind xp">Stage</span><div class="what"><img class="tl-logo" src="img/logos/secad.png" alt="" loading="lazy"><b>SECAD SA · Saint-Martin-du-Fresne</b><p>Premier stage sur une carte de contrôle de dosage agricole menacée par l'obsolescence de ses composants.</p></div></li>
+        <li><span class="yr num">2023–26</span><span class="kind">Formation</span><div class="what"><img class="tl-logo" src="img/logos/ece.png" alt="" loading="lazy"><b>ECE Paris · Diplôme d'ingénieur, majeure Systèmes embarqués</b><p>Grade master. C/C++ temps réel, bus de communication, FPGA/VHDL, PCB, MBSE. Semestre d'échange à Londres.</p></div></li>
+        <li><span class="yr num">2024</span><span class="kind xp">Stage</span><div class="what"><img class="tl-logo" src="img/logos/secad.png" alt="" loading="lazy"><b>SECAD SA · réembauché</b><p>Deuxième stage sur la même carte client, jusqu'au prototype validé.</p></div></li>
+        <li><span class="yr num">2025</span><span class="kind xp">Stage</span><div class="what"><img class="tl-logo" src="img/logos/stellantis.png" alt="" loading="lazy"><b>Stellantis Motorsport · Formula E</b><p>Équipe systèmes, Versailles-Satory : intégration CAN et débogage du volant de la monoplace GEN4.</p></div></li>
+        <li><span class="yr num">2026</span><span class="kind xp">Stage de fin d'études</span><div class="what"><img class="tl-logo" src="img/logos/sonceboz.png" alt="" loading="lazy"><b>Sonceboz SA · Boncourt, Suisse</b><p>Laboratoire électronique véhicules commerciaux, environnement IATF 16949 : bancs de qualification de condensateurs.</p></div></li>
         <li class="now"><span class="yr num">Auj.</span><span class="kind">Disponible</span><div class="what"><b>Diplômé, à la recherche d'un premier emploi</b><p>Ingénieur hardware ou systèmes embarqués.</p></div></li>
       </ol>
     </div>
@@ -420,7 +444,7 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
       <div class="ch-text">
         <div class="ch-head rv" data-beat="sz-intro">
           <span class="ch-index" aria-hidden="true">01</span>
-          <img class="ch-logo" src="img/logos/sonceboz.png" alt="Logo Sonceboz">
+          <img class="ch-logo" src="img/logos/sonceboz.png" alt="">
           <p class="eyebrow">Expérience · 02 → 08 / 2026</p>
           <h2 class="disp">Sonceboz</h2>
           <div class="ch-meta"><span>Boncourt, Suisse</span><span>Mécatronique automobile</span><span>IATF 16949</span></div>
@@ -461,7 +485,7 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
       <div class="ch-text">
         <div class="ch-head rv" data-beat="st-intro">
           <span class="ch-index" aria-hidden="true">02</span>
-          <img class="ch-logo" src="img/logos/stellantis.png" alt="Logo Stellantis Motorsport">
+          <img class="ch-logo" src="img/logos/stellantis.png" alt="">
           <p class="eyebrow">Expérience · 2025</p>
           <h2 class="disp">Stellantis Motorsport</h2>
           <div class="ch-meta"><span>Versailles-Satory</span><span>Équipe systèmes Formula E</span></div>
@@ -516,7 +540,7 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
       <div class="ch-text">
         <div class="ch-head rv" data-beat="se-intro">
           <span class="ch-index" aria-hidden="true">03</span>
-          <img class="ch-logo" src="img/logos/secad.png" alt="Logo SECAD">
+          <img class="ch-logo" src="img/logos/secad.png" alt="">
           <p class="eyebrow">Expérience · 2023 &amp; 2024 · 2 stages</p>
           <h2 class="disp">SECAD</h2>
           <div class="ch-meta"><span>Saint-Martin-du-Fresne</span><span>Conception et fabrication électronique</span></div>
@@ -659,6 +683,8 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
       </div>
       <div class="tablewrap rv">
         <table class="skills">
+          <caption class="sr-only">Compétences, détail et stage où elles ont été mises en pratique</caption>
+          <thead class="sr-only"><tr><th scope="col">Domaine</th><th scope="col">Détail</th><th scope="col">Où</th></tr></thead>
           <tbody>
             <tr><th scope="row">Conception hardware</th><td>Schéma, routage PCB 2 et 4 couches, choix de composants, DFM / AOI, BOM, IPC-2221, obsolescence et sourcing, rétro-ingénierie</td><td class="src">Sonceboz, SECAD</td></tr>
             <tr><th scope="row">Électronique de puissance</th><td>Demi-ponts, gate drivers, étages de puissance, dimensionnement, derating et gestion thermique</td><td class="src">Sonceboz</td></tr>
@@ -671,9 +697,9 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
         </table>
       </div>
       <div class="tools">
-        <div class="rv"><h4>Logiciels</h4><ul class="chips"><li>Altium Designer 365</li><li>OrCAD Capture / PCB Editor</li><li>KiCad</li><li>LTspice</li><li>Vector CANdb++</li><li>CANalyzer</li><li>CANoe</li><li>PCAN-View</li><li>MoTeC Display Creator</li><li>MATLAB / Simulink</li><li>MCUXpresso</li><li>VS Code</li></ul>
-          <h4 style="margin-top:22px">Instrumentation</h4><ul class="chips"><li>Oscilloscope</li><li>Sonde de courant</li><li>Pont LCR</li><li>Enceintes de chocs thermiques</li></ul></div>
-        <div class="rv"><h4>Langues</h4><ul class="lang"><li><span>Français</span><span>natif</span></li><li><span>Anglais</span><span>C1 · TOEIC 940</span></li><li><span>Espagnol</span><span>B2</span></li></ul></div>
+        <div class="rv"><h3>Logiciels</h3><ul class="chips"><li>Altium Designer 365</li><li>OrCAD Capture / PCB Editor</li><li>KiCad</li><li>LTspice</li><li>Vector CANdb++</li><li>CANalyzer</li><li>CANoe</li><li>PCAN-View</li><li>MoTeC Display Creator</li><li>MATLAB / Simulink</li><li>MCUXpresso</li><li>VS Code</li></ul>
+          <h3 style="margin-top:22px">Instrumentation</h3><ul class="chips"><li>Oscilloscope</li><li>Sonde de courant</li><li>Pont LCR</li><li>Enceintes de chocs thermiques</li></ul></div>
+        <div class="rv"><h3>Langues</h3><ul class="lang"><li><span>Français</span><span>natif</span></li><li><span>Anglais</span><span>C1 · TOEIC 940</span></li><li><span>Espagnol</span><span>B2</span></li></ul></div>
       </div>
     </div>
   </section>
@@ -687,9 +713,9 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
         <p class="quote-src">Ce que mon stage de fin d'études m'a le plus appris</p>
       </blockquote>
       <div class="motiv-grid">
-        <div class="rv"><h4>Le métier</h4><p>Ingénieur hardware dans un secteur à fortes contraintes : automobile, aéronautique, sport automobile. Concevoir des circuits de puissance, router les cartes, puis les voir passer les essais.</p></div>
-        <div class="rv"><h4>L'environnement</h4><p>Une entreprise où hardware, mécanique, logiciel, production et achats travaillent côte à côte. Cette proximité accélère l'apprentissage et oblige à penser en système dès les premières années.</p></div>
-        <div class="rv"><h4>Le long terme</h4><p>Encadrer une équipe un jour, mais seulement sur un socle technique solide, acquis au contact des problèmes réels. C'est dans cet ordre que je construis mon parcours.</p></div>
+        <div class="rv"><h3>Le métier</h3><p>Ingénieur hardware dans un secteur à fortes contraintes : automobile, aéronautique, sport automobile. Concevoir des circuits de puissance, router les cartes, puis les voir passer les essais.</p></div>
+        <div class="rv"><h3>L'environnement</h3><p>Une entreprise où hardware, mécanique, logiciel, production et achats travaillent côte à côte. Cette proximité accélère l'apprentissage et oblige à penser en système dès les premières années.</p></div>
+        <div class="rv"><h3>Le long terme</h3><p>Encadrer une équipe un jour, mais seulement sur un socle technique solide, acquis au contact des problèmes réels. C'est dans cet ordre que je construis mon parcours.</p></div>
       </div>
     </div>
   </section>
@@ -700,7 +726,7 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
       <p class="eyebrow">Contact</p>
       <h2 class="disp">Parlons-en</h2>
       <div class="contact-rows">
-        <div class="crow"><span class="k">E-mail</span><a class="v" id="mail" href="mailto:julien.carro01@gmail.com">julien.carro01@gmail.com</a><button class="copy" type="button" data-copy="julien.carro01@gmail.com">Copier</button></div>
+        <div class="crow"><span class="k">E-mail</span><a class="v" id="mail" href="mailto:julien.carro01@gmail.com">julien.carro01@gmail.com</a><button class="copy" type="button" data-copy="julien.carro01@gmail.com">Copier</button><span class="sr-only" role="status" id="copyStatus"></span></div>
         <div class="crow"><span class="k">LinkedIn</span><a class="v" href="https://www.linkedin.com/in/j-carro" target="_blank" rel="noopener">linkedin.com/in/j-carro</a><span></span></div>
         <div class="crow"><span class="k">Disponibilité</span><span class="v">Immédiate</span><span></span></div>
       </div>
@@ -710,7 +736,11 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
 
 <footer class="wrap">
   <div class="inner">
-    <p>© 2026 Julien Carro. Chaque chiffre de ce site provient de mes stages et peut être détaillé en entretien. La carte Sonceboz en 3D est une reconstitution ; les fichiers de conception de Sonceboz, Stellantis et SECAD restent leur propriété. Modèle 3D « Formula E GEN3 EVO » par <a href="https://sketchfab.com/3d-models/formula-e-gen3-evo-eed1e4bd65be459597e8d1db4c211a65" target="_blank" rel="noopener">bluspycrab</a>, licence <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, volant remplacé.</p>
+    <p>© 2026 Julien Carro. Chaque chiffre de ce site provient de mes stages et peut être détaillé en entretien.</p>
+    <details>
+      <summary>Mentions et crédits</summary>
+      <p>La carte Sonceboz en 3D est une reconstitution ; les fichiers de conception de Sonceboz, Stellantis et SECAD restent leur propriété. Modèle 3D « Formula E GEN3 EVO » par <a href="https://sketchfab.com/3d-models/formula-e-gen3-evo-eed1e4bd65be459597e8d1db4c211a65" target="_blank" rel="noopener">bluspycrab</a>, licence <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, volant remplacé.</p>
+    </details>
   </div>
 </footer>
 
@@ -732,7 +762,7 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
     const h=document.documentElement.scrollHeight-innerHeight;
     bar.style.transform='scaleX('+(h>0?scrollY/h:0)+')';
     let on=-1; targets.forEach((t,i)=>{ if(t && t.getBoundingClientRect().top < innerHeight*0.45) on=i; });
-    links.forEach((a,i)=>a.classList.toggle('on',i===on));
+    links.forEach((a,i)=>{ a.classList.toggle('on',i===on); if(i===on) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current'); });
   }
   const tl=document.querySelector('.timeline');
   function tlProg(){ if(!tl) return; const r=tl.getBoundingClientRect(); const k=Math.max(0,Math.min(1,(innerHeight*.75-r.top)/r.height)); tl.style.setProperty('--tl',k.toFixed(3)); }
@@ -753,9 +783,16 @@ footer p{font:400 12px/1.6 var(--f-mono);max-width:96ch}
       const step=t=>{ const k=Math.min(1,(t-t0)/d), v=end*(1-Math.pow(1-k,3)); tn.textContent=(end>=1000&&end<3000)?String(Math.round(2000+(end-2000)*(1-Math.pow(1-k,3)))):v.toFixed(dec).replace('.',','); if(k<1) requestAnimationFrame(step); else tn.textContent=raw; }; requestAnimationFrame(step); }),{threshold:.6});
     nums.forEach(n=>io3.observe(n));
   }
+  // mobile menu
+  const hdr=document.querySelector('header.nav'), mb=document.getElementById('menuBtn');
+  const setMenu=o=>{ hdr.classList.toggle('open',o); mb.setAttribute('aria-expanded',String(o)); mb.setAttribute('aria-label',o?'Fermer le menu':'Menu'); };
+  mb.addEventListener('click',()=>setMenu(!hdr.classList.contains('open')));
+  hdr.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+  addEventListener('keydown',e=>{ if(e.key==='Escape'&&hdr.classList.contains('open')){ setMenu(false); mb.focus(); } });
+  matchMedia('(min-width:821px)').addEventListener('change',e=>{ if(e.matches) setMenu(false); });
   window.__introEnd=performance.now(); requestAnimationFrame(()=>window.__revealHero());
   document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>{
-    const done=t=>{b.textContent=t;setTimeout(()=>b.textContent='Copier',1600)};
+    const st=document.getElementById('copyStatus');const done=t=>{b.textContent=t;if(st)st.textContent=t==='Copié'?'Adresse e-mail copiée':'Adresse e-mail sélectionnée';setTimeout(()=>{b.textContent='Copier';if(st)st.textContent=''},1600)};
     const fallback=()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('mail'));const s=getSelection();s.removeAllRanges();s.addRange(r);done('Sélectionné')};
     try{ navigator.clipboard.writeText(b.dataset.copy).then(()=>done('Copié'),fallback);}catch(e){fallback();}
   }));
