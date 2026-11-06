@@ -442,7 +442,7 @@ function drawScreen(t) {
 function drawScreenInner(t, c) {
   const W = 900, H = 700;
   c.fillStyle = '#05070a'; c.fillRect(0, 0, W, H);
-  if (screenMode === 1 && (t % 6) < 2.4) { c.fillStyle = '#0c0f12'; c.font = '500 26px IBM Plex Mono, monospace'; c.fillText('luminosité 0 %', 30, H - 30); screenTex.needsUpdate = true; return; }
+  if (screenMode === 1 && (t % 6) < 2.4) { c.fillStyle = '#0c0f12'; c.font = '500 26px Geist Mono, monospace'; c.fillText('luminosité 0 %', 30, H - 30); screenTex.needsUpdate = true; return; }
   const box = (x, y, w, h) => { c.fillStyle = '#121a22'; c.fillRect(x, y, w, h); c.strokeStyle = '#26323d'; c.lineWidth = 2; c.strokeRect(x, y, w, h); };
   c.textBaseline = 'alphabetic';
   // top bar: battery
@@ -455,13 +455,13 @@ function drawScreenInner(t, c) {
   // delta bar
   const d = 2 * Math.sin(t * .5); c.fillStyle = d > 0 ? '#e2061c' : '#2fb562'; c.beginPath(); c.moveTo(250, 530); c.lineTo(650, 530); c.lineTo(610, 590); c.lineTo(290, 590); c.closePath(); c.fill();
   c.fillStyle = '#fff'; c.font = '800 46px Arial'; c.textAlign = 'center'; c.fillText((d > 0 ? '+' : '') + d.toFixed(2), 450, 578); c.textAlign = 'left';
-  c.fillStyle = '#7c8b97'; c.font = '500 20px IBM Plex Mono, monospace'; c.fillText('données fictives', 30, 680);
+  c.fillStyle = '#7c8b97'; c.font = '500 20px Geist Mono, monospace'; c.fillText('données fictives', 30, 680);
   if (screenMode === 2) {
-    c.fillStyle = 'rgba(5,7,10,.9)'; c.fillRect(0, 0, W, H); c.fillStyle = '#d9e3ea'; c.font = '600 26px IBM Plex Mono, monospace'; c.fillText('décodage bit à bit', 40, 70);
-    const v = (Math.floor(t * 2) * 2654435761) >>> 0; for (let b = 0; b < 16; b++) { const on = (v >> b) & 1; const x = 40 + b * 52; c.fillStyle = on ? (b > 8 ? '#e2061c' : '#2f6fd8') : '#1a232c'; c.fillRect(x, 120, 44, 70); c.fillStyle = '#fff'; c.font = '700 30px IBM Plex Mono, monospace'; c.fillText(String(on), x + 13, 166); }
-    ['b0–1  mode', 'b2–5  carto', 'b6    drapeau', 'b7–15 valeur'].forEach((s, i) => { c.fillStyle = '#d9e3ea'; c.font = '500 30px IBM Plex Mono, monospace'; c.fillText(s, 40, 280 + i * 60); });
+    c.fillStyle = 'rgba(5,7,10,.9)'; c.fillRect(0, 0, W, H); c.fillStyle = '#d9e3ea'; c.font = '600 26px Geist Mono, monospace'; c.fillText('décodage bit à bit', 40, 70);
+    const v = (Math.floor(t * 2) * 2654435761) >>> 0; for (let b = 0; b < 16; b++) { const on = (v >> b) & 1; const x = 40 + b * 52; c.fillStyle = on ? (b > 8 ? '#e2061c' : '#2f6fd8') : '#1a232c'; c.fillRect(x, 120, 44, 70); c.fillStyle = '#fff'; c.font = '700 30px Geist Mono, monospace'; c.fillText(String(on), x + 13, 166); }
+    ['b0–1  mode', 'b2–5  carto', 'b6    drapeau', 'b7–15 valeur'].forEach((s, i) => { c.fillStyle = '#d9e3ea'; c.font = '500 30px Geist Mono, monospace'; c.fillText(s, 40, 280 + i * 60); });
   }
-  if (screenMode === 3) { c.fillStyle = '#e2061c'; c.fillRect(0, H - 130, W, 130); c.fillStyle = '#fff'; c.font = '800 46px Arial'; c.fillText('ALARME', 40, H - 52); c.font = '500 26px IBM Plex Mono, monospace'; c.fillText('maintenue par compteur', 280, H - 56); }
+  if (screenMode === 3) { c.fillStyle = '#e2061c'; c.fillRect(0, H - 130, W, 130); c.fillStyle = '#fff'; c.font = '800 46px Arial'; c.fillText('ALARME', 40, H - 52); c.font = '500 26px Geist Mono, monospace'; c.fillText('maintenue par compteur', 280, H - 56); }
   screenTex.needsUpdate = true;
 }
 
@@ -734,16 +734,16 @@ function makeEnv(kind, content) {
   let sky;
 
   if (kind === 'lab') { // 1 unit = 50 mm. Electronics bench: ESD mat, scope, bench supply, thermal chamber
-    sky = gradTex([[0, '#c9d2d9'], [.5, '#e6ebef'], [1, '#e6ebef']]); E.fog = [0xe2e8ec, 16, 48];
-    const esd = rep(speckle(512, 512, '#7c93a2', [['#8ea5b3', 2600, 2], ['#6a8090', 2600, 2], ['#a9bcc6', 260, 1.5]], 3, (g, w, h) => { g.strokeStyle = 'rgba(30,50,65,.12)'; g.lineWidth = 2; for (let i = 0; i <= 8; i++) { g.beginPath(); g.moveTo(i * w / 8, 0); g.lineTo(i * w / 8, h); g.stroke(); g.beginPath(); g.moveTo(0, i * h / 8); g.lineTo(w, i * h / 8); g.stroke(); } }), 6, 4);
+    sky = gradTex([[0, '#1c2330'], [.5, '#10141b'], [1, '#0d1015']]); E.fog = [0x10141a, 16, 48];
+    const esd = rep(speckle(512, 512, '#3a4a57', [['#465866', 2600, 2], ['#2f3d48', 2600, 2], ['#5b6e7c', 260, 1.5]], 3, (g, w, h) => { g.strokeStyle = 'rgba(255,255,255,.05)'; g.lineWidth = 2; for (let i = 0; i <= 8; i++) { g.beginPath(); g.moveTo(i * w / 8, 0); g.lineTo(i * w / 8, h); g.stroke(); g.beginPath(); g.moveTo(0, i * h / 8); g.lineTo(w, i * h / 8); g.stroke(); } }), 6, 4);
     plane(36, 24, M({ map: esd, roughness: .92 }), 0, -.02, -2);
-    box(40, 1.6, 28, M({ color: 0xd9d6cf, roughness: .7 }), 0, -.84, -2);
-    plane(400, 400, M({ color: 0xbfc6cc, roughness: 1 }), 0, -16, 0);
+    box(40, 1.6, 28, M({ color: 0x25282e, roughness: .7 }), 0, -.84, -2);
+    plane(400, 400, M({ color: 0x0c0f13, roughness: 1 }), 0, -16, 0);
     // wall + pegboard
-    const peg = rep(canvasTex(256, 256, (g, w, h) => { g.fillStyle = '#e4e7ea'; g.fillRect(0, 0, w, h); g.fillStyle = '#b9c0c6'; for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) { g.beginPath(); g.arc(16 + i * 32, 16 + j * 32, 3.5, 0, 7); g.fill(); } }), 10, 5);
+    const peg = rep(canvasTex(256, 256, (g, w, h) => { g.fillStyle = '#1c2027'; g.fillRect(0, 0, w, h); g.fillStyle = '#101318'; for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) { g.beginPath(); g.arc(16 + i * 32, 16 + j * 32, 3.5, 0, 7); g.fill(); } }), 10, 5);
     const wall = new THREE.Mesh(new THREE.PlaneGeometry(60, 30), M({ map: peg, roughness: .9 })); wall.position.set(0, 13, -10); wall.receiveShadow = true; props.add(wall);
     // oscilloscope with the triangular ripple current on screen
-    const scopeBody = M({ color: 0x5d6a77, roughness: .55 }), dark = M({ color: 0x1b1d20, roughness: .4 }), knob = M({ color: 0x2a2c2f, roughness: .45 });
+    const scopeBody = M({ color: 0x3a414a, roughness: .55 }), dark = M({ color: 0x1b1d20, roughness: .4 }), knob = M({ color: 0x2a2c2f, roughness: .45 });
     const SC = new THREE.Group(); SC.position.set(-6.2, 0, -4.6); SC.rotation.y = .55; props.add(SC); const sb = box(8.2, 4.4, 5, scopeBody, 0, 2.2, 0, .25); SC.add(sb);
     const scr = canvasTex(512, 320, (g, w, h) => { g.fillStyle = '#071012'; g.fillRect(0, 0, w, h); g.strokeStyle = 'rgba(120,160,170,.25)'; g.lineWidth = 1; for (let i = 0; i <= 10; i++) { g.beginPath(); g.moveTo(i * w / 10, 0); g.lineTo(i * w / 10, h); g.stroke(); } for (let i = 0; i <= 8; i++) { g.beginPath(); g.moveTo(0, i * h / 8); g.lineTo(w, i * h / 8); g.stroke(); } g.strokeStyle = '#f3d23a'; g.lineWidth = 3; g.beginPath(); for (let x = 0; x <= w; x++) { const p = (x / 64) % 1, t = 1 - Math.abs(p * 2 - 1); const y = h * .32 - (t - .5) * h * .3; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); g.strokeStyle = '#3fd0e0'; g.beginPath(); for (let x = 0; x <= w; x++) { const y = (x / 32) % 2 < 1 ? h * .62 : h * .82; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); g.fillStyle = '#f3d23a'; g.font = '16px monospace'; g.fillText('CH1 I ripple   20.0 kHz', 10, 22); g.fillStyle = '#3fd0e0'; g.fillText('CH2 PWM 50 %', 10, h - 12); });
     const sm = new THREE.MeshBasicMaterial({ map: scr, toneMapped: false }); mats.push(sm);
@@ -803,10 +803,10 @@ function makeEnv(kind, content) {
   }
 
   if (kind === 'room') { // 1 unit = 100 mm. Sim-racing rig in a room: parquet, rig rails, seat, screen
-    sky = gradTex([[0, '#d8d3cb'], [.5, '#ece8e1'], [1, '#ece8e1']]); E.fog = [0xece8e1, 18, 55];
+    sky = gradTex([[0, '#1f1d1b'], [.5, '#151413'], [1, '#121110']]); E.fog = [0x151413, 18, 55];
     const parquet = rep(canvasTex(512, 512, (g, w, h) => { const r = rng(21); const n = 4; for (let i = 0; i < n; i++) { const base = [206 + r() * 14, 192 + r() * 12, 170 + r() * 12]; g.fillStyle = `rgb(${base.map(Math.round).join(',')})`; g.fillRect(0, i * h / n, w, h / n); g.strokeStyle = 'rgba(110,90,65,.14)'; g.lineWidth = 1; for (let k = 0; k < 18; k++) { const y0 = i * h / n + r() * h / n; g.beginPath(); for (let x = 0; x <= w; x += 16) g.lineTo(x, y0 + Math.sin(x / 40 + k) * 2); g.stroke(); } g.fillStyle = 'rgba(80,65,50,.35)'; g.fillRect(0, i * h / n, w, 2); g.fillRect(r() * w, i * h / n, 2, h / n); } }), 10, 10);
     plane(120, 120, M({ map: parquet, roughness: .55 }), 0, -.01, 0);
-    const wall = new THREE.Mesh(new THREE.PlaneGeometry(120, 40), M({ color: 0xefebe4, roughness: .95 })); wall.position.set(0, 20, -26); wall.receiveShadow = true; props.add(wall);
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(120, 40), M({ color: 0x2a2826, roughness: .95 })); wall.position.set(0, 20, -26); wall.receiveShadow = true; props.add(wall);
     // aluminium profile rig
     const alu = M({ color: 0x2a2c30, roughness: .45, metalness: .6 });
     for (const x of [-3.4, 3.4]) box(.8, .8, 9, alu, x, .4, 1.5);
@@ -1276,15 +1276,15 @@ function drawScope(dt) {
   if (active === 'rk-1' || active === 'pr-intro') {
     const W = scope.width, H = scope.height, g = sctx, h = objects.rocket.content.userData.hist; g.clearRect(0, 0, W, H);
     g.strokeStyle = '#e6e8eb'; g.lineWidth = 1; g.beginPath(); g.moveTo(0, H / 2); g.lineTo(W, H / 2); g.stroke();
-    [['th', '#e2061c'], ['de', '#0f1114']].forEach(([k, col]) => { g.strokeStyle = col; g.lineWidth = 3; g.beginPath(); h.forEach((p, i) => { const x = W - (h.length - 1 - i) * 2, y = H / 2 - p[k] * H * (k === 'th' ? 1.3 : .9); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); });
-    g.font = '500 17px IBM Plex Mono, monospace'; g.fillStyle = '#e2061c'; g.fillText('assiette', 12, 24); g.fillStyle = '#0f1114'; g.fillText('braquage ailerons', 110, 24);
+    [['th', '#7aa7ff'], ['de', '#e8ebf0']].forEach(([k, col]) => { g.strokeStyle = col; g.lineWidth = 3; g.beginPath(); h.forEach((p, i) => { const x = W - (h.length - 1 - i) * 2, y = H / 2 - p[k] * H * (k === 'th' ? 1.3 : .9); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); });
+    g.font = '500 17px Geist Mono, monospace'; g.fillStyle = '#7aa7ff'; g.fillText('assiette', 12, 24); g.fillStyle = '#e8ebf0'; g.fillText('braquage ailerons', 110, 24);
     return;
   }
   const W = scope.width, H = scope.height, g = sctx; g.clearRect(0, 0, W, H);
   g.strokeStyle = '#e6e8eb'; g.lineWidth = 1; for (let x = 0; x < W; x += 44) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); } g.beginPath(); g.moveTo(0, H / 2); g.lineTo(W, H / 2); g.stroke();
-  const ph = reduce ? 0 : T * .6; g.strokeStyle = '#e2061c'; g.lineWidth = 3; g.beginPath();
+  const ph = reduce ? 0 : T * .6; g.strokeStyle = '#7aa7ff'; g.lineWidth = 3; g.beginPath();
   for (let x = 0; x < W; x++) { const p = ((x / 110 + ph) % 1); const t = 1 - Math.abs(p * 2 - 1); const y = H * .78 - t * H * .56; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
-  g.fillStyle = '#0f1114'; g.font = '500 18px IBM Plex Mono, monospace'; g.fillText('I ripple · 20 kHz', 14, 28);
+  g.fillStyle = '#e8ebf0'; g.font = '500 18px Geist Mono, monospace'; g.fillText('I ripple · 20 kHz', 14, 28);
 }
 
 resize(); setActive(active); requestAnimationFrame(frame);
