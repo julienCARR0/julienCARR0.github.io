@@ -307,6 +307,44 @@ footer details p{margin-top:8px}
 .btn-abs{display:inline-flex;align-items:center;gap:10px}
 .btn-abs::before{content:"";width:8px;height:8px;border-radius:50%;background:#ffcf33;box-shadow:0 0 0 3px rgba(255,207,51,.3)}
 .wheel-hint{font:500 12px/1.4 var(--f-mono);color:var(--ink-3)}
+
+/* ---- relief: rhythm of light and dark bands ---- */
+.stats{background:var(--ink);color:#fff;padding-block:72px 76px;margin-top:20px;position:relative;z-index:2}
+.stats ol{gap:0}
+.stats li{background:transparent;border:0;border-left:1px solid rgba(255,255,255,.12);border-radius:0;box-shadow:none;padding:6px 28px 4px}
+.stats li:first-child{border-left:0;padding-left:0}
+.stats li:hover{transform:none}
+.stats .big{color:#fff;font-size:clamp(60px,6.4vw,104px)}
+.stats .big small{color:var(--c)!important}
+.stats .lbl{color:#b9bec7;font-size:15px}
+.stats .src{color:var(--c);filter:brightness(1.35)}
+.stats li:nth-child(4) .src{filter:brightness(1.7)}
+
+/* tools ticker: a tilted red band, like a kerb */
+.ticker{position:relative;z-index:3;background:var(--red);color:#fff;transform:rotate(-1.6deg);margin:-10px -2vw 0;padding:16px 0;overflow:hidden;box-shadow:0 24px 40px -24px rgba(184,4,22,.6)}
+.ticker-track{display:flex;width:max-content;animation:tick 48s linear infinite}
+.ticker span{font:900 clamp(20px,2.2vw,30px)/1 var(--f-display);font-stretch:115%;text-transform:uppercase;letter-spacing:-.01em;white-space:nowrap;padding:0 22px;display:flex;align-items:center;gap:44px}
+.ticker span::after{content:"";width:10px;height:10px;background:#fff;clip-path:polygon(0 0,100% 0,100% 100%,30% 100%,0 70%)}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* chapter numbers: solid, in the chapter colour */
+.chapter .ch-index{-webkit-text-stroke:0;color:var(--acc);opacity:1}
+
+/* motivations: the second dark band */
+#motivations{background:var(--ink);color:#fff;padding-block:130px 120px;margin-top:80px}
+#motivations .eyebrow{color:#ff6b78}
+#motivations .eyebrow::before{background:#ff6b78}
+#motivations .quote{color:#fff}
+#motivations .quote em{color:#ff3347}
+#motivations .quote-src{color:#9aa0aa}
+#motivations .motiv-grid>div{background:#1a1d22;border-color:#2b2f36}
+#motivations .motiv-grid h3{color:#fff}
+#motivations .motiv-grid p{color:#b9bec7}
+#motivations :focus-visible{outline-color:#fff}
+.contact{margin-top:0}
+
+/* deeper, layered cards in the chapters */
+.chapter .card{box-shadow:0 1px 0 rgba(15,17,20,.04),0 30px 60px -36px color-mix(in srgb,var(--acc) 60%,transparent),0 12px 24px -18px rgba(15,17,20,.18)}
 @media (max-width:1000px){
   .timeline li{grid-template-columns:90px minmax(0,1fr);gap:6px 18px}
   .timeline .kind{grid-column:2;grid-row:1}
@@ -329,6 +367,13 @@ footer details p{margin-top:8px}
   .hero .inner{grid-template-columns:1fr}
   .hero{align-items:flex-start;padding-block:calc(var(--nav) + 44vh + 10px) 40px;min-height:auto}
   .stats ol{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats li{padding:22px 16px}
+  .stats li:nth-child(3){border-left:0;padding-left:0}
+  .stats li:nth-child(n+3){border-top:1px solid rgba(255,255,255,.12)}
+  .ticker{padding:12px 0}
+  .stats .big{font-size:clamp(44px,12vw,60px)}
+  .nav .cta{white-space:nowrap;padding:0 14px}
+  .mark{font-size:15px}
   .beat{min-height:70vh;padding-block:24px}
   .card{padding:22px}
   .dragzone{left:0;width:100%;height:44vh;bottom:auto;z-index:5}
@@ -354,6 +399,7 @@ footer details p{margin-top:8px}
   .viz,.skip,.stats li,.timeline::before,.hud{transition:none}
   .stats li:hover{transform:none}
   .spot{display:none}
+  .ticker-track{animation:none}
 }
 </style>
 </head>
@@ -417,6 +463,8 @@ footer details p{margin-top:8px}
       </ol>
     </div>
   </section>
+
+  <div class="ticker" aria-hidden="true"><div class="ticker-track"><span>Altium Designer</span><span>OrCAD</span><span>KiCad</span><span>LTspice</span><span>CAN · DBC</span><span>CANalyzer</span><span>FreeRTOS</span><span>C / C++</span><span>MATLAB / Simulink</span><span>FPGA / VHDL</span><span>IPC-2221</span><span>AEC-Q200</span><span>Altium Designer</span><span>OrCAD</span><span>KiCad</span><span>LTspice</span><span>CAN · DBC</span><span>CANalyzer</span><span>FreeRTOS</span><span>C / C++</span><span>MATLAB / Simulink</span><span>FPGA / VHDL</span><span>IPC-2221</span><span>AEC-Q200</span></div></div>
 
   <!-- PARCOURS -->
   <section class="section wrap" id="parcours" data-beat="parcours">
