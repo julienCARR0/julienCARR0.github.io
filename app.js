@@ -1288,4 +1288,6 @@ function drawScope(dt) {
 }
 
 resize(); setActive(active); requestAnimationFrame(frame);
+// tell the page the first frames are on screen, so the loading screen can lift
+requestAnimationFrame(() => requestAnimationFrame(() => { window.__appReady = true; dispatchEvent(new Event('app-ready')); }));
 setTimeout(loadCar, 2500);

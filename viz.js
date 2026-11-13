@@ -1,7 +1,8 @@
 // Beat detection and 2D diagrams. Works without WebGL.
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const C = { ink: css('--ink'), ink2: css('--ink-2'), ink3: css('--ink-3'), line: css('--line'), red: css('--red'), redInk: css('--red-ink'), paper: css('--paper'), wash: css('--red-wash') };
+// Colours are CSS variables, so the diagrams follow the theme and the chapter's layer colour.
+const C = { ink: 'var(--ink)', ink2: 'var(--ink-2)', ink3: 'var(--ink-3)', line: 'var(--line)', red: 'var(--acc)', redInk: 'var(--acc-ink)', paper: 'var(--bg-2)', wash: 'var(--acc-wash)', sheet: 'var(--sheet)', onAcc: 'var(--on-acc)' };
 const NS = 'http://www.w3.org/2000/svg';
 function el(tag, attrs = {}, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
 function text(parent, x, y, s, o = {}) { const t = el('text', Object.assign({ x, y, 'font-family': 'IBM Plex Mono, monospace', 'font-size': 12, fill: C.ink2 }, o), parent); t.textContent = s; return t; }
@@ -95,7 +96,7 @@ const bitCells = [];
 })();
 function bitsTick() {
   const v = Math.floor(Math.random() * 65536);
-  for (let b = 0; b < 16; b++) { const on = (v >> b) & 1; const c = bitCells[b]; c.t.textContent = on; c.t.setAttribute('fill', on ? '#fff' : C.ink3); c.r.setAttribute('fill', on ? (FIELDS.findIndex(f => b >= f[0] && b < f[1]) % 2 ? C.ink2 : C.red) : C.paper); }
+  for (let b = 0; b < 16; b++) { const on = (v >> b) & 1; const c = bitCells[b]; c.t.textContent = on; c.t.setAttribute('fill', on ? C.sheet : C.ink3); c.r.setAttribute('fill', on ? (FIELDS.findIndex(f => b >= f[0] && b < f[1]) % 2 ? C.ink2 : C.red) : C.paper); }
 }
 bitsTick();
 
@@ -162,7 +163,7 @@ let alarmHead = null;
   for (let yr = 2023; yr <= 2035; yr++) { el('line', { x1: X(yr), x2: X(yr), y1: y + 10, y2: y + 16, stroke: C.ink3 }, s); if (yr % 2 === 1) text(s, X(yr), y + 32, String(yr), { 'text-anchor': 'middle', 'font-size': 11, fill: C.ink3 }); }
   [[2023, '1er stage', 'analyse et choix des remplaçants'], [2024, '2e stage', 'prototype fabriqué et validé'], [2035, 'production assurée', 'jusqu\'à cette date']].forEach(([yr, a, b], i) => {
     const x = X(yr), up = i !== 1;
-    el('circle', { cx: x, cy: y, r: 8, fill: '#fff', stroke: i === 2 ? C.red : C.ink, 'stroke-width': 3 }, s);
+    el('circle', { cx: x, cy: y, r: 8, fill: C.sheet, stroke: i === 2 ? C.red : C.ink, 'stroke-width': 3 }, s);
     const ty = up ? y - 52 : y + 62, anchor = i === 2 ? 'end' : 'start', tx = i === 2 ? x + 6 : x - 6;
     text(s, tx, ty, a, { 'text-anchor': anchor, fill: i === 2 ? C.redInk : C.ink, 'font-weight': 600, 'font-size': 13 });
     text(s, tx, ty + 17, b, { 'text-anchor': anchor, 'font-size': 11.5, fill: C.ink3 });
@@ -179,7 +180,7 @@ let alarmHead = null;
   [[bx + 30, by + bh - 34, 120, 22], [bx + 190, by + bh - 34, 80, 22], [bx + bw - 34, by + 40, 22, 70]].forEach(([x, y, w, h]) => {
     el('rect', { x, y, width: w, height: h, rx: 2, fill: C.ink, opacity: .85 }, s);
   });
-  [[bx + 14, by + 14], [bx + bw - 14, by + 14], [bx + 14, by + bh - 14], [bx + bw - 14, by + bh - 14]].forEach(([x, y]) => el('circle', { cx: x, cy: y, r: 6, fill: '#fff', stroke: C.ink2, 'stroke-width': 1.5 }, s));
+  [[bx + 14, by + 14], [bx + bw - 14, by + 14], [bx + 14, by + bh - 14], [bx + bw - 14, by + bh - 14]].forEach(([x, y]) => el('circle', { cx: x, cy: y, r: 6, fill: C.sheet, stroke: C.ink2, 'stroke-width': 1.5 }, s));
   text(s, bx + 18, by + 40, 'contour identique', { fill: C.ink, 'font-weight': 600 });
   text(s, bx + 18, by + 58, 'connecteurs aux mêmes positions', { 'font-size': 11.5, fill: C.ink3 });
   // legend
