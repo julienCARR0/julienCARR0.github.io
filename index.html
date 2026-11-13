@@ -6,7 +6,7 @@
 <title>Julien Carro · Ingénieur électronique et systèmes embarqués</title>
 <meta name="description" content="Julien Carro, ingénieur électronique et systèmes embarqués : stages chez Sonceboz, Stellantis Motorsport et SECAD, projet SimFeel. CV interactif en 3D.">
 <meta name="author" content="Julien Carro">
-<meta name="theme-color" content="#081018">
+<meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="https://juliencarr0.github.io/">
 <meta property="og:type" content="profile">
 <meta property="og:locale" content="fr_FR">
@@ -14,15 +14,12 @@
 <meta property="og:title" content="Julien Carro · Ingénieur électronique et systèmes embarqués">
 <meta property="og:description" content="Je conçois la carte, puis j'écris le firmware qui tourne dessus. CV interactif : Sonceboz, Stellantis Motorsport, SECAD, SimFeel.">
 <meta name="twitter:card" content="summary">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23081018'/%3E%3Cpath d='M7 7h18v18H12.4L7 19.6z' fill='%23ff5c57'/%3E%3C/svg%3E">
-<script>
-/* Avant le premier rendu : thème mémorisé, et marqueur "js" pour les animations */
-(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='schema'){d.dataset.theme='schema';document.querySelector('meta[name=theme-color]').content='#f4f1e4';}}catch(e){}})();
-</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0b0c'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Arial,sans-serif' font-weight='700' font-size='15' fill='%23fff'%3EJC%3C/text%3E%3C/svg%3E">
+<script>document.documentElement.classList.add('js');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&display=swap">
 <link rel="stylesheet" href="style.css">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js">
 <script type="application/ld+json">
@@ -32,47 +29,30 @@
 </head>
 <body>
 
-<div id="boot" aria-hidden="true">
-  <div class="boot-in">
-    <div class="mark"><i></i>Julien Carro</div>
-    <div class="boot-trace">
-      <svg viewBox="0 0 420 46" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <path class="t1" d="M9 34H96l18-18h74l18 18h92l18-18h86"/>
-        <circle class="pad" cx="9" cy="34" r="6"/><circle class="pad" cx="151" cy="16" r="6"/><circle class="pad" cx="252" cy="34" r="6"/><circle class="pad" cx="410" cy="16" r="6"/>
-      </svg>
-      <div class="mask"></div>
-    </div>
-    <p class="boot-msg"><i></i>Mise sous tension : construction des scènes 3D</p>
-  </div>
-</div>
+<div id="boot" aria-hidden="true"><div class="boot-in"><span class="mark">Julien Carro</span><span class="boot-bar"><i></i></span></div></div>
 
 <a class="skip" href="#parcours">Aller au contenu</a>
-<div class="board-bg" aria-hidden="true"></div>
-<div class="grid-hot" aria-hidden="true"></div>
 <canvas id="gl" aria-hidden="true"></canvas>
 <div id="labels" aria-hidden="true"></div>
 <div class="dragzone" id="drag" aria-hidden="true"></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <div class="hud off" id="hud" aria-live="polite"><canvas id="scope" width="440" height="128" hidden></canvas><div class="cap" id="cap"></div></div>
-<nav class="rail" id="rail" aria-label="Progression dans la page"><span class="rail-track"></span><span class="rail-fill" id="railFill"></span></nav>
 
 <header class="nav wrap">
   <div class="inner">
-    <a class="mark" href="#top"><i aria-hidden="true"></i>Julien Carro</a>
+    <a class="mark" href="#top">Julien Carro</a>
     <nav aria-label="Sections" id="menu"><ul>
       <li><a href="#parcours">Parcours</a></li>
-      <li><a href="#sonceboz" data-l style="--c:var(--L-sz)">Sonceboz</a></li>
-      <li><a href="#stellantis" data-l style="--c:var(--L-st)">Stellantis</a></li>
-      <li><a href="#secad" data-l style="--c:var(--L-se)">SECAD</a></li>
-      <li><a href="#projets" data-l style="--c:var(--L-pr)">Projets</a></li>
+      <li><a href="#sonceboz">Sonceboz</a></li>
+      <li><a href="#stellantis">Stellantis</a></li>
+      <li><a href="#secad">SECAD</a></li>
+      <li><a href="#projets">Projets</a></li>
       <li><a href="#competences">Compétences</a></li>
       <li class="m-only"><a href="#contact">Me contacter</a></li>
     </ul></nav>
     <div class="nav-right">
-      <button class="icon-btn" type="button" id="cmdBtn" aria-haspopup="dialog" aria-label="Aller à une section ou lancer une action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span>Aller à</span><kbd id="cmdKey">Ctrl K</kbd></button>
-      <button class="icon-btn" type="button" id="themeBtn" aria-label="Passer au thème clair"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg></button>
-      <a class="cta" href="#contact">Me contacter</a>
-      <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-controls="menu" aria-expanded="false" aria-label="Menu"><svg class="b" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <a class="pill small" href="#contact">Me contacter</a>
+      <button class="menu-btn" type="button" id="menuBtn" aria-controls="menu" aria-expanded="false" aria-label="Menu"><svg class="b" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg><svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
   </div>
 </header>
@@ -85,13 +65,10 @@
         <p class="eyebrow" style="--i:0">Ingénieur électronique &amp; systèmes embarqués</p>
         <h1 class="disp" id="heroTitle"><span class="ln"><span>Julien</span></span> <span class="ln"><span>Carro</span></span></h1>
         <p class="role" style="--i:1">Je conçois la carte, puis j'écris le firmware qui tourne dessus.</p>
-        <p class="lede" style="--i:2">Diplômé de l'ECE Paris en 2026. Quatre stages industriels en Suisse et en France : électronique de puissance chez Sonceboz, réseau CAN d'une Formula E chez Stellantis Motorsport, refonte d'une carte en fin de vie chez SECAD.</p>
-        <ul class="facts" style="--i:3">
-          <li class="go">Disponible immédiatement</li>
-          <li>À la recherche d'un premier emploi</li>
-          <li>FR · EN C1 · ES B2</li>
-        </ul>
-        <span class="hint" style="--i:4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg>Faites glisser la carte pour la tourner</span>
+        <p class="lede" style="--i:2">Diplômé de l'ECE Paris en 2026. Quatre stages industriels en Suisse et en France : électronique de puissance chez Sonceboz, réseau CAN d'une Formula E chez Stellantis Motorsport, refonte d'une carte en fin de vie chez SECAD.</p>
+        <p class="avail" style="--i:3">Disponible immédiatement, à la recherche d'un premier emploi. Français, anglais C1, espagnol B2.</p>
+        <p class="actions" style="--i:4"><a class="pill" href="#contact">Me contacter</a><a class="textlink" href="#parcours">Voir le parcours</a></p>
+        <span class="hint" style="--i:5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg>Faites glisser la carte pour la tourner</span>
       </div>
     </div>
   </section>
@@ -121,8 +98,8 @@
         <li><span class="yr num">2023</span><span class="kind xp">Stage</span><div class="what"><img class="tl-logo" src="img/logos/secad.png" alt="" loading="lazy"><b>SECAD SA · Saint-Martin-du-Fresne</b><p>Premier stage sur une carte de contrôle de dosage agricole menacée par l'obsolescence de ses composants.</p></div></li>
         <li><span class="yr num">2023–26</span><span class="kind">Formation</span><div class="what"><img class="tl-logo" src="img/logos/ece.png" alt="" loading="lazy"><b>ECE Paris · Diplôme d'ingénieur, majeure Systèmes embarqués</b><p>Grade master. C/C++ temps réel, bus de communication, FPGA/VHDL, PCB, MBSE. Semestre d'échange à Londres.</p></div></li>
         <li><span class="yr num">2024</span><span class="kind xp">Stage</span><div class="what"><img class="tl-logo" src="img/logos/secad.png" alt="" loading="lazy"><b>SECAD SA · réembauché</b><p>Deuxième stage sur la même carte client, jusqu'au prototype validé.</p></div></li>
-        <li><span class="yr num">2025</span><span class="kind xp">Stage</span><div class="what"><img class="tl-logo" src="img/logos/stellantis.png" alt="" loading="lazy"><b>Stellantis Motorsport · Formula E</b><p>Équipe systèmes, Versailles-Satory : intégration CAN et débogage du volant de la monoplace GEN4.</p></div></li>
-        <li><span class="yr num">2026</span><span class="kind xp">Stage de fin d'études</span><div class="what"><img class="tl-logo" src="img/logos/sonceboz.png" alt="" loading="lazy"><b>Sonceboz SA · Boncourt, Suisse</b><p>Laboratoire électronique véhicules commerciaux, environnement IATF 16949 : bancs de qualification de condensateurs.</p></div></li>
+        <li><span class="yr num">2025</span><span class="kind xp">Stage</span><div class="what"><img class="tl-logo" src="img/logos/stellantis.png" alt="" loading="lazy"><b>Stellantis Motorsport · Formula E</b><p>Équipe systèmes, Versailles-Satory : intégration CAN et débogage du volant de la monoplace GEN4.</p></div></li>
+        <li><span class="yr num">2026</span><span class="kind xp">Stage de fin d'études</span><div class="what"><img class="tl-logo" src="img/logos/sonceboz.png" alt="" loading="lazy"><b>Sonceboz SA · Boncourt, Suisse</b><p>Laboratoire électronique véhicules commerciaux, environnement IATF 16949 : bancs de qualification de condensateurs.</p></div></li>
         <li class="now"><span class="yr num">Auj.</span><span class="kind">Disponible</span><div class="what"><b>Diplômé, à la recherche d'un premier emploi</b><p>Ingénieur hardware ou systèmes embarqués.</p></div></li>
       </ol>
     </div>
@@ -142,7 +119,7 @@
         <div class="beat" data-beat="sz-1"><div class="card rv">
           <p class="k">Le besoin</p>
           <h3>Qualifier en interne, sans se fier aux datasheets</h3>
-          <p>Sonceboz voulait ouvrir le <strong>multisourcing</strong> de ses condensateurs hybrides : 40 références de 12 fabricants, à comparer selon <strong>AEC-Q200</strong>. Pour l'essai en charge, chaque condensateur doit recevoir son courant d'ondulation maximal, en continu, à 120–130 °C.</p>
+          <p>Sonceboz voulait ouvrir le <strong>multisourcing</strong> de ses condensateurs hybrides : 40 références de 12 fabricants, à comparer selon <strong>AEC-Q200</strong>. Pour l'essai en charge, chaque condensateur doit recevoir son courant d'ondulation maximal, en continu, à 120–130 °C.</p>
           <ul class="chips"><li>40 références</li><li>8 canaux par carte</li><li>sans microcontrôleur</li><li>1 000 h sans intervention</li></ul>
         </div></div>
         <div class="beat" data-beat="sz-2"><div class="card rv">
@@ -154,13 +131,13 @@
         <div class="beat" data-beat="sz-4"><div class="card rv">
           <p class="k">Le dimensionnement</p>
           <div class="kpi"><span class="v num">40</span><span class="u">canaux dimensionnés un par un, chacun pour sa référence de condensateur</span></div>
-          <p>Chaque canal est dimensionné pour sa référence : 1 à 3 inductances en série, résistances de dissipation en parallèle avec derating pour 130 °C. Les pistes 24 V font <strong>5,5 mm</strong> selon IPC-2221, soit environ 16 °C d'échauffement à 10 A.</p>
+          <p>Chaque canal est dimensionné pour sa référence : 1 à 3 inductances en série, résistances de dissipation en parallèle avec derating pour 130 °C. Les pistes 24 V font <strong>5,5 mm</strong> selon IPC-2221, soit environ 16 °C d'échauffement à 10 A.</p>
           <ul class="chips"><li>Altium Designer</li><li>LTspice</li><li>PCB 2 couches</li><li>IPC-2221</li></ul>
         </div></div>
         <div class="beat" data-beat="sz-5"><div class="card rv">
           <p class="k">Résultat</p>
           <div class="kpi"><span class="v num">7<small>/7</small></span><span class="u">cartes conçues, toutes fonctionnelles au premier prototype, sans re-spin</span></div>
-          <p>Sur le projet, j'ai conçu 7 cartes : les 5 cartes de test en charge présentées ici et 2 cartes de vieillissement thermique. Les essais ont tourné plusieurs centaines d'heures en continu, sans incident. J'ai transmis la campagne en cours à l'équipe, avec les bancs, la base de composants et le rapport technique.</p>
+          <p>Sur le projet, j'ai conçu 7 cartes : les 5 cartes de test en charge présentées ici et 2 cartes de vieillissement thermique. Les essais ont tourné plusieurs centaines d'heures en continu, sans incident. J'ai transmis la campagne en cours à l'équipe, avec les bancs, la base de composants et le rapport technique.</p>
           <p class="note">La carte en 3D est une reconstitution d'après mon routage et ma nomenclature. Les fichiers de conception appartiennent à Sonceboz.</p>
         </div></div>
       </div>
@@ -178,11 +155,11 @@
           <h2 class="disp">Stellantis Motorsport</h2>
           <div class="ch-meta"><span>Versailles-Satory</span><span>Équipe systèmes Formula E</span></div>
           <p class="ch-title">Faire dialoguer le volant GEN4 avec la voiture</p>
-          <p class="lede">En GEN4, toutes les équipes utilisent un volant standard Spark à écran MoTeC C125. Ma mission : y migrer la configuration du volant précédent et l'intégrer au réseau CAN, alors que le temps de simulateur est rare.</p>
+          <p class="lede">En GEN4, toutes les équipes utilisent un volant standard Spark à écran MoTeC C125. Ma mission : y migrer la configuration du volant précédent et l'intégrer au réseau CAN, alors que le temps de simulateur est rare.</p>
         </div>
         <div class="beat" data-beat="st-1"><div class="card rv">
           <p class="k">250 signaux, 188 canaux</p>
-          <p class="wheel-hint">Astuce : cliquez sur un bouton du volant pour changer la page de l'écran.</p>
+          <p class="wheel-hint">Astuce : cliquez sur un bouton du volant pour changer la page de l'écran.</p>
           <div class="kpi"><span class="v num">250<small>+</small></span><span class="u">signaux à afficher sur 18 pages pilote, avec un écran limité à 188 canaux</span></div>
           <p>J'ai regroupé des informations dans des signaux codés sur plusieurs bits, puis je les ai décodés bit à bit dans la configuration de l'écran. Toutes les fonctions utiles ont été conservées.</p>
           <div class="panel"><div class="panel-h"><b>Un signal, plusieurs informations</b><span>décodage bit à bit</span></div><svg id="bits" viewBox="0 0 560 150" role="img" aria-label="Exemple de signal de 16 bits découpé en plusieurs champs"></svg></div>
@@ -190,30 +167,30 @@
         <div class="beat" data-beat="st-2"><div class="card rv">
           <p class="k">Au simulateur</p>
           <h3>Deux pannes bloquantes résolues</h3>
-          <p><strong>Écran noir au démarrage :</strong> incohérence d'identifiant de message entre la DBC et la documentation. Je l'ai corrigée côté volant pour ne pas attendre une mise à jour du VCU.</p>
-          <p><strong>Plusieurs secondes de latence :</strong> j'ai affiché la charge CPU et les FPS de l'écran pour l'écarter, puis remonté la cause à une version du logiciel VCU. Le retour à la version précédente a rétabli un temps de réaction normal.</p>
+          <p><strong>Écran noir au démarrage :</strong> incohérence d'identifiant de message entre la DBC et la documentation. Je l'ai corrigée côté volant pour ne pas attendre une mise à jour du VCU.</p>
+          <p><strong>Plusieurs secondes de latence :</strong> j'ai affiché la charge CPU et les FPS de l'écran pour l'écarter, puis remonté la cause à une version du logiciel VCU. Le retour à la version précédente a rétabli un temps de réaction normal.</p>
           <div class="panel"><div class="panel-h"><b>Journal de débogage</b><span>simulateur</span></div><div class="log" id="log">
-              <div><span class="s">[1]</span> Volant sous tension : communication OK, <span class="c">écran noir</span></div>
+              <div><span class="s">[1]</span> Volant sous tension : communication OK, <span class="c">écran noir</span></div>
               <div>→ luminosité initialisée à 0 % au démarrage</div>
               <div>→ ID du message dans la DBC ≠ ID du document descriptif</div>
               <div><span class="ok">✓</span> configuration corrigée côté volant, écran allumé</div>
-              <div><span class="s">[2]</span> Appui bouton → affichage : <span class="c">plusieurs secondes</span></div>
-              <div>→ charge CPU ≈ 30 %, 20 FPS : l'écran n'est pas en cause</div>
-              <div>→ cause : version récente du logiciel VCU</div>
+              <div><span class="s">[2]</span> Appui bouton → affichage : <span class="c">plusieurs secondes</span></div>
+              <div>→ charge CPU ≈ 30 %, 20 FPS : l'écran n'est pas en cause</div>
+              <div>→ cause : version récente du logiciel VCU</div>
               <div><span class="ok">✓</span> retour à la version précédente, réaction normale</div>
             </div></div>
         </div></div>
         <div class="beat" data-beat="st-3"><div class="card rv">
           <p class="k">Alarmes</p>
           <div class="kpi"><span class="v num">100</span><span class="u">alarmes multiplexées rendues lisibles pour le pilote</span></div>
-          <p>Les alarmes arrivent dans un message multiplexé et défilaient trop vite pour être lues. Une approche temporelle a échoué. J'ai mis en place <strong>un compteur de maintien par alarme</strong> : l'alarme reste affichée tant que son bit est actif.</p>
-          <div class="panel"><div class="panel-h"><b>Chronogramme d'une alarme</b><span class="tag">Schéma</span></div><svg id="alarm" viewBox="0 0 560 300" role="img" aria-label="Chronogramme : le bit brut n'est vrai que dans une trame sur dix, l'affichage maintenu par compteur reste stable"></svg></div>
+          <p>Les alarmes arrivent dans un message multiplexé et défilaient trop vite pour être lues. Une approche temporelle a échoué. J'ai mis en place <strong>un compteur de maintien par alarme</strong> : l'alarme reste affichée tant que son bit est actif.</p>
+          <div class="panel"><div class="panel-h"><b>Chronogramme d'une alarme</b><span class="tag">Schéma</span></div><svg id="alarm" viewBox="0 0 560 300" role="img" aria-label="Chronogramme : le bit brut n'est vrai que dans une trame sur dix, l'affichage maintenu par compteur reste stable"></svg></div>
         </div></div>
         <div class="beat" data-beat="st-4"><div class="card rv">
           <p class="k">Livrables</p>
           <h3>La migration GEN3 → GEN4 débloquée</h3>
           <p>J'ai reconstruit la DBC sous <strong>Vector CANdb++</strong> et livré le mapping complet des signaux, qui a servi à l'équipe logiciel pour adapter le VCU. J'ai aussi caractérisé les <strong>7 sélecteurs rotatifs</strong> non linéaires sous PCAN-View et vérifié la cohérence des signaux au simulateur avec CANalyzer.</p>
-          <div class="panel"><div class="panel-h"><b>Sélecteur rotatif · 12 positions</b><span class="tag">Allure</span></div><svg id="rotary" viewBox="0 0 560 300" role="img" aria-label="Tension renvoyée par un sélecteur rotatif selon sa position : paliers non linéaires et chute entre deux positions"></svg></div>
+          <div class="panel"><div class="panel-h"><b>Sélecteur rotatif · 12 positions</b><span class="tag">Allure</span></div><svg id="rotary" viewBox="0 0 560 300" role="img" aria-label="Tension renvoyée par un sélecteur rotatif selon sa position : paliers non linéaires et chute entre deux positions"></svg></div>
           <ul class="chips"><li>CAN · DBC</li><li>CANalyzer</li><li>PCAN-View</li><li>MoTeC Display Creator</li></ul>
           <p class="note">Le volant est modélisé d'après le plan du fabricant, l'écran affiche des données fictives. La monoplace est une Formula E GEN3 Evo, modèle 3D de bluspycrab (Sketchfab, licence CC BY 4.0).</p>
         </div></div>
@@ -242,7 +219,7 @@
         <div class="beat" data-beat="se-2"><div class="card rv">
           <p class="k">Refonte de la carte</p>
           <h3>4 couches, zéro changement mécanique</h3>
-          <p>J'ai redessiné la carte sous <strong>OrCAD Capture / PCB Editor</strong> en remplacement direct : même contour, mêmes positions de connecteurs. Le prototype a été fabriqué et validé.</p>
+          <p>J'ai redessiné la carte sous <strong>OrCAD Capture / PCB Editor</strong> en remplacement direct : même contour, mêmes positions de connecteurs. Le prototype a été fabriqué et validé.</p>
         </div></div>
         <div class="beat" data-beat="se-3"><div class="card rv">
           <p class="k">Firmware et validation</p>
@@ -254,7 +231,7 @@
         <div class="viz" data-viz="se-intro se-3">
           <div class="panel">
             <div class="panel-h"><b>Durée de vie de la carte</b><span>2023 → 2035</span></div>
-            <svg id="life" viewBox="0 0 560 220" role="img" aria-label="Frise : premier stage en 2023, prototype validé en 2024, production assurée jusqu'en 2035"></svg>
+            <svg id="life" viewBox="0 0 560 220" role="img" aria-label="Frise : premier stage en 2023, prototype validé en 2024, production assurée jusqu'en 2035"></svg>
           </div>
         </div>
         <div class="viz" data-viz="se-1">
@@ -291,18 +268,18 @@
           <p class="k">Commande · MATLAB / Simulink</p>
           <h3>Guidage de fusée par ailerons actifs</h3>
           <p>J'ai modélisé la dynamique du vol et les lois de commande, puis je les ai validées en simulation sous MATLAB / Simulink.</p>
-          <p>L'animation montre le principe : une rafale incline la fusée, les ailerons braquent dans le sens opposé et la ramènent dans l'axe. Le petit graphe suit l'assiette et le braquage.</p>
+          <p>L'animation montre le principe : une rafale incline la fusée, les ailerons braquent dans le sens opposé et la ramènent dans l'axe. Le petit graphe suit l'assiette et le braquage.</p>
           <p class="note">Animation illustrative, pas les résultats de ma simulation.</p>
         </div></div>
         <div class="beat" data-beat="fs-1"><div class="card rv">
           <p class="k">Équipe · Formula Student</p>
           <h3>ARECE, véhicule autonome</h3>
-          <p>Membre de l'équipe ARECE de l'ECE en Formula Student. La voiture est un ADS-DV, la monoplace de la catégorie véhicule autonome : elle roule seule, guidée par ses caméras, son lidar et son calculateur embarqué.</p>
+          <p>Membre de l'équipe ARECE de l'ECE en Formula Student. La voiture est un ADS-DV, la monoplace de la catégorie véhicule autonome : elle roule seule, guidée par ses caméras, son lidar et son calculateur embarqué.</p>
         </div></div>
         <div class="beat" data-beat="fs-2"><div class="card rv">
           <p class="k">Ma partie</p>
           <h3>Optimisation de trajectoire</h3>
-          <p>J'ai travaillé sur l'optimisation de trajectoire à partir d'acquisitions vidéo. En épreuve, la piste est délimitée par des cônes bleus à gauche et jaunes à droite ; la ligne rouge montre une trajectoire calculée entre les deux.</p>
+          <p>J'ai travaillé sur l'optimisation de trajectoire à partir d'acquisitions vidéo. En épreuve, la piste est délimitée par des cônes bleus à gauche et jaunes à droite ; la ligne rouge montre une trajectoire calculée entre les deux.</p>
           <p class="note">ADS-DV modélisé d'après photos. Tracé des cônes et trajectoire illustratifs.</p>
         </div></div>
       </div>
@@ -320,15 +297,15 @@
           <div class="ch-meta"><span>KiCad</span><span>ESP32</span><span>Simulation automobile</span></div>
           <p class="ch-title">Sentir l'ABS et le patinage sous le pied, sur un pédalier de simulation</p>
           <p class="lede">La simulation automobile, ou <em>sim racing</em>, consiste à piloter une voiture dans un jeu de course réaliste, avec un vrai volant et un vrai pédalier posés devant l'écran. C'est un loisir répandu, et un outil d'entraînement dans le sport automobile.</p>
-          <p class="lede">Dans une vraie voiture, le pilote sent sous son pied l'ABS qui se déclenche quand il freine trop fort, ou les roues qui patinent à l'accélération. Sur un pédalier de simulation, il ne sent rien. SimFeel ajoute ces sensations : le jeu signale l'événement, et la pédale vibre.</p>
+          <p class="lede">Dans une vraie voiture, le pilote sent sous son pied l'ABS qui se déclenche quand il freine trop fort, ou les roues qui patinent à l'accélération. Sur un pédalier de simulation, il ne sent rien. SimFeel ajoute ces sensations : le jeu signale l'événement, et la pédale vibre.</p>
         </div>
         <div class="beat" data-beat="sf-0"><div class="card rv">
           <p class="k">Le principe</p>
           <h3>Du jeu à la pédale, en trois étapes</h3>
           <ol class="steps">
-            <li><span><b>Le logiciel SimFeel</b>, sur l'ordinateur, lit les données de la voiture dans le jeu : freinage, ABS, patinage, régime moteur, rapport engagé.</span></li>
+            <li><span><b>Le logiciel SimFeel</b>, sur l'ordinateur, lit les données de la voiture dans le jeu : freinage, ABS, patinage, régime moteur, rapport engagé.</span></li>
             <li><span><b>La carte de commande</b>, avec son ESP32, reçoit l'ordre de vibration et alimente le module de la bonne pédale.</span></li>
-            <li><span><b>Le module</b>, fixé sous la pédale, fait tourner un petit moteur à balourd : une masse décentrée qui fait vibrer la pédale, comme le vibreur d'un téléphone.</span></li>
+            <li><span><b>Le module</b>, fixé sous la pédale, fait tourner un petit moteur à balourd : une masse décentrée qui fait vibrer la pédale, comme le vibreur d'un téléphone.</span></li>
           </ol>
         </div></div>
         <div class="beat" data-beat="sf-1"><div class="card rv">
@@ -348,12 +325,12 @@
           <p class="k">Le logiciel</p>
           <h3>Les données du jeu traduites en vibrations</h3>
           <p>Le logiciel SimFeel lit les données du jeu et règle chaque effet séparément.</p>
-          <ul class="chips"><li>Frein : ABS</li><li>blocage de roue</li><li>rétrogradage</li><li>Accélérateur : patinage</li><li>rupteur</li><li>passage de rapport</li></ul>
+          <ul class="chips"><li>Frein : ABS</li><li>blocage de roue</li><li>rétrogradage</li><li>Accélérateur : patinage</li><li>rupteur</li><li>passage de rapport</li></ul>
         </div></div>
       </div>
       <div class="ch-stage">
         <div class="viz" data-viz="sf-3">
-          <div class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="img/simfeel.webp" alt="Capture d'écran du logiciel SimFeel : réglages du frein (ABS, blocage de roue, rétrogradage) et de l'accélérateur (patinage, rupteur, passage de rapport)" loading="lazy" width="1079" height="732"></div>
+          <div class="shot"><div class="bar"><i></i><i></i><i></i></div><img src="img/simfeel.webp" alt="Capture d'écran du logiciel SimFeel : réglages du frein (ABS, blocage de roue, rétrogradage) et de l'accélérateur (patinage, rupteur, passage de rapport)" loading="lazy" width="1079" height="732"></div>
           <p class="cap">Capture réelle du logiciel SimFeel.</p>
         </div>
       </div>
@@ -372,13 +349,13 @@
           <caption class="sr-only">Compétences, détail et stage où elles ont été mises en pratique</caption>
           <thead class="sr-only"><tr><th scope="col">Domaine</th><th scope="col">Détail</th><th scope="col">Où</th></tr></thead>
           <tbody>
-            <tr><th scope="row">Conception hardware</th><td>Schéma, routage PCB 2 et 4 couches, choix de composants, DFM / AOI, BOM, IPC-2221, obsolescence et sourcing, rétro-ingénierie</td><td class="src"><span><a class="lay" href="#sonceboz" style="--c:var(--L-sz)">Sonceboz</a><a class="lay" href="#secad" style="--c:var(--L-se)">SECAD</a></span></td></tr>
-            <tr><th scope="row">Électronique de puissance</th><td>Demi-ponts, gate drivers, étages de puissance, dimensionnement, derating et gestion thermique</td><td class="src"><span><a class="lay" href="#sonceboz" style="--c:var(--L-sz)">Sonceboz</a></span></td></tr>
-            <tr><th scope="row">Test &amp; validation</th><td>Conception de bancs, plans de qualification, campagnes d'essai, caractérisation, vieillissement accéléré, rapports</td><td class="src"><span><a class="lay" href="#sonceboz" style="--c:var(--L-sz)">Sonceboz</a><a class="lay" href="#secad" style="--c:var(--L-se)">SECAD</a></span></td></tr>
-            <tr><th scope="row">Embarqué</th><td>C, C++, FreeRTOS, MCU NXP (LPC, ColdFire), programmation bas niveau, contraintes temps réel, FPGA / VHDL</td><td class="src"><span><a class="lay" href="#secad" style="--c:var(--L-se)">SECAD</a><span class="lay" style="--c:var(--ink-3)">ECE</span></span></td></tr>
-            <tr><th scope="row">Bus &amp; réseaux</th><td>CAN (architecture DBC, analyse de trames, messages multiplexés), UART, SPI, I²C</td><td class="src"><span><a class="lay" href="#stellantis" style="--c:var(--L-st)">Stellantis</a><a class="lay" href="#secad" style="--c:var(--L-se)">SECAD</a></span></td></tr>
-            <tr><th scope="row">Systèmes</th><td>Intégration de sous-systèmes, validation sur simulateur, débogage et analyse de cause racine, MBSE</td><td class="src"><span><a class="lay" href="#stellantis" style="--c:var(--L-st)">Stellantis</a></span></td></tr>
-            <tr><th scope="row">Normes</th><td>IATF 16949, AEC-Q200, IPC-2221</td><td class="src"><span><a class="lay" href="#sonceboz" style="--c:var(--L-sz)">Sonceboz</a></span></td></tr>
+            <tr><th scope="row">Conception hardware</th><td>Schéma, routage PCB 2 et 4 couches, choix de composants, DFM / AOI, BOM, IPC-2221, obsolescence et sourcing, rétro-ingénierie</td><td class="src"><a href="#sonceboz">Sonceboz</a>, <a href="#secad">SECAD</a></td></tr>
+            <tr><th scope="row">Électronique de puissance</th><td>Demi-ponts, gate drivers, étages de puissance, dimensionnement, derating et gestion thermique</td><td class="src"><a href="#sonceboz">Sonceboz</a></td></tr>
+            <tr><th scope="row">Test &amp; validation</th><td>Conception de bancs, plans de qualification, campagnes d'essai, caractérisation, vieillissement accéléré, rapports</td><td class="src"><a href="#sonceboz">Sonceboz</a>, <a href="#secad">SECAD</a></td></tr>
+            <tr><th scope="row">Embarqué</th><td>C, C++, FreeRTOS, MCU NXP (LPC, ColdFire), programmation bas niveau, contraintes temps réel, FPGA / VHDL</td><td class="src"><a href="#secad">SECAD</a>, <span>ECE</span></td></tr>
+            <tr><th scope="row">Bus &amp; réseaux</th><td>CAN (architecture DBC, analyse de trames, messages multiplexés), UART, SPI, I²C</td><td class="src"><a href="#stellantis">Stellantis</a>, <a href="#secad">SECAD</a></td></tr>
+            <tr><th scope="row">Systèmes</th><td>Intégration de sous-systèmes, validation sur simulateur, débogage et analyse de cause racine, MBSE</td><td class="src"><a href="#stellantis">Stellantis</a></td></tr>
+            <tr><th scope="row">Normes</th><td>IATF 16949, AEC-Q200, IPC-2221</td><td class="src"><a href="#sonceboz">Sonceboz</a></td></tr>
           </tbody>
         </table>
       </div>
@@ -395,11 +372,11 @@
     <div class="inner">
       <p class="eyebrow rv">Motivations</p>
       <blockquote class="rv">
-        <p class="quote">Ce qui compte, c'est le <em>résultat livré</em> : un produit fiable, documenté, fabricable.</p>
+        <p class="quote">Ce qui compte, c'est le <em>résultat livré</em> : un produit fiable, documenté, fabricable.</p>
         <p class="quote-src">Ce que mon stage de fin d'études m'a le plus appris</p>
       </blockquote>
       <div class="motiv-grid">
-        <div class="rv" style="--d:0"><h3>Le métier</h3><p>Ingénieur hardware dans un secteur à fortes contraintes : automobile, aéronautique, sport automobile. Concevoir des circuits de puissance, router les cartes, puis les voir passer les essais.</p></div>
+        <div class="rv" style="--d:0"><h3>Le métier</h3><p>Ingénieur hardware dans un secteur à fortes contraintes : automobile, aéronautique, sport automobile. Concevoir des circuits de puissance, router les cartes, puis les voir passer les essais.</p></div>
         <div class="rv" style="--d:1"><h3>L'environnement</h3><p>Une entreprise où hardware, mécanique, logiciel, production et achats travaillent côte à côte. Cette proximité accélère l'apprentissage et oblige à penser en système dès les premières années.</p></div>
         <div class="rv" style="--d:2"><h3>Le long terme</h3><p>Encadrer une équipe un jour, mais seulement sur un socle technique solide, acquis au contact des problèmes réels. C'est dans cet ordre que je construis mon parcours.</p></div>
       </div>
@@ -430,16 +407,6 @@
     </details>
   </div>
 </footer>
-
-<dialog id="cmd" aria-label="Aller à une section ou lancer une action">
-  <div class="cmd-in">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
-    <input id="cmdInput" type="text" role="combobox" aria-expanded="true" aria-controls="cmdList" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Une section, une entreprise, une action…">
-    <kbd>Échap</kbd>
-  </div>
-  <ul id="cmdList" role="listbox" aria-label="Résultats"></ul>
-  <div class="cmd-foot"><span><kbd>↑</kbd> <kbd>↓</kbd> choisir</span><span><kbd>Entrée</kbd> valider</span></div>
-</dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script type="importmap">

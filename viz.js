@@ -5,7 +5,7 @@ const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).
 const C = { ink: 'var(--ink)', ink2: 'var(--ink-2)', ink3: 'var(--ink-3)', line: 'var(--line)', red: 'var(--acc)', redInk: 'var(--acc-ink)', paper: 'var(--bg-2)', wash: 'var(--acc-wash)', sheet: 'var(--sheet)', onAcc: 'var(--on-acc)' };
 const NS = 'http://www.w3.org/2000/svg';
 function el(tag, attrs = {}, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
-function text(parent, x, y, s, o = {}) { const t = el('text', Object.assign({ x, y, 'font-family': 'IBM Plex Mono, monospace', 'font-size': 12, fill: C.ink2 }, o), parent); t.textContent = s; return t; }
+function text(parent, x, y, s, o = {}) { const t = el('text', Object.assign({ x, y, 'font-family': 'Geist, sans-serif', 'font-size': 12, fill: C.ink2 }, o), parent); t.textContent = s; return t; }
 
 /* ---------- active beat ---------- */
 const beatEls = [...document.querySelectorAll('[data-beat]')];
