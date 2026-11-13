@@ -15,7 +15,7 @@
   const boot = $('#boot'); const t0 = performance.now(); let lifted = false;
   function lift() {
     if (lifted) return; lifted = true;
-    const go = () => { window.__introEnd = performance.now() + 100; root.classList.add('ready'); setTimeout(() => boot && boot.remove(), 1200); };
+    const go = () => { window.__introEnd = performance.now() + 100; root.classList.add('ready'); setTimeout(() => { boot && boot.remove(); root.classList.add('opened'); }, 1500); };
     if (reduce || !boot) return go();
     boot.classList.add('done');
     setTimeout(go, Math.max(340, 800 - (performance.now() - t0)));
@@ -46,7 +46,19 @@
     hdr.classList.toggle('scrolled', scrollY > 8);
     let on = -1; targets.forEach((t, i) => { if (t && t.getBoundingClientRect().top < innerHeight * .45) on = i; });
     links.forEach((a, i) => { if (i === on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+    if (on !== current) { current = on; if (!hovering) moveLens(links[on]); }
   }
+  /* la lentille de verre glisse sous la section en cours, ou sous le lien survolé */
+  const lens = $('#lens'); let current = -2, hovering = false;
+  function moveLens(a) {
+    if (!lens) return;
+    if (!a || !a.offsetWidth) { lens.classList.remove('on'); return; }
+    lens.style.width = a.offsetWidth + 'px'; lens.style.transform = `translateX(${a.offsetLeft}px)`; lens.classList.add('on');
+  }
+  links.forEach(a => { a.addEventListener('pointerenter', () => { hovering = true; moveLens(a); }); a.addEventListener('focus', () => { hovering = true; moveLens(a); }); });
+  const menuUl = $('.nav ul'); const back = () => { hovering = false; moveLens(links[current]); };
+  menuUl.addEventListener('pointerleave', back); menuUl.addEventListener('focusout', back);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!hovering) moveLens(links[current]); });
   let tick = false;
   addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(() => { tick = false; onScroll(); }); } }, { passive: true });
   addEventListener('resize', onScroll); onScroll();
