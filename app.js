@@ -1094,12 +1094,13 @@ addEventListener('pointerup', endDrag); addEventListener('pointercancel', endDra
 let mobile = false, needs = true, last = performance.now(), T = 0;
 // on desktop the 3D lives in a framed panel aligned with the right-hand column
 function placePanel() {
-  const st = document.querySelector('.ch-stage'), drag2 = document.getElementById('drag'), hud2 = document.getElementById('hud');
-  if (mobile || !st) { for (const el of [canvas, drag2]) { el.style.left = el.style.top = el.style.width = el.style.height = el.style.right = el.style.bottom = ''; } hud2.style.right = hud2.style.bottom = ''; return; }
+  const st = document.querySelector('.ch-stage'), drag2 = document.getElementById('drag'), hud2 = document.getElementById('hud'), frame = document.getElementById('glFrame');
+  if (mobile || !st) { for (const el of [canvas, drag2]) { el.style.left = el.style.top = el.style.width = el.style.height = el.style.right = el.style.bottom = ''; } hud2.style.right = hud2.style.bottom = ''; if (frame) frame.style.left = frame.style.top = frame.style.width = frame.style.height = ''; return; }
   const r0 = st.getBoundingClientRect(), nav = 64, top = nav + 22, bottom = 22, right = 24, r = { left: r0.left - 12, width: innerWidth - right - (r0.left - 12) };
   canvas.style.left = r.left + 'px'; canvas.style.top = top + 'px'; canvas.style.width = r.width + 'px'; canvas.style.height = (innerHeight - top - bottom) + 'px';
   Object.assign(drag2.style, { left: r.left + 'px', top: top + 'px', width: r.width + 'px', height: (innerHeight - top - bottom) + 'px', right: 'auto', bottom: 'auto' });
-  hud2.style.right = (right + 14) + 'px'; hud2.style.bottom = (bottom + 14) + 'px';
+  if (frame) Object.assign(frame.style, { left: r.left + 'px', top: top + 'px', width: r.width + 'px', height: (innerHeight - top - bottom) + 'px' }); // the glass rim sits exactly over the 3D view
+  hud2.style.right = (right + 30) + 'px'; hud2.style.bottom = (bottom + 30) + 'px';
 }
 function resize() {
   mobile = innerWidth < 820;

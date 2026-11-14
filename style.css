@@ -25,9 +25,9 @@
   --nav: 64px;
   --ease: cubic-bezier(.22, .61, .36, 1);
   --liquid: cubic-bezier(.3, 1.35, .5, 1);     /* léger dépassement : le verre "coule" puis se pose */
-  --glass: rgba(255, 255, 255, .58);
-  --glass-blur: saturate(1.9) blur(22px);
-  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1px 0 rgba(0, 0, 0, .04), inset 0 0 0 1px rgba(255, 255, 255, .55), 0 0 0 .5px rgba(0, 0, 0, .1), 0 14px 34px -14px rgba(0, 0, 0, .22);
+  --glass: linear-gradient(160deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .34));
+  --glass-blur: saturate(2.2) blur(26px);
+  --glass-edge: inset 0 1.5px 0 #fff, inset 0 -1px 0 rgba(0, 0, 0, .05), inset 1px 0 0 rgba(255, 255, 255, .6), inset -1px 0 0 rgba(255, 255, 255, .6), inset 0 -8px 14px -10px rgba(255, 255, 255, .9), 0 0 0 .5px rgba(0, 0, 0, .1), 0 18px 40px -16px rgba(0, 0, 0, .28);
   color-scheme: light;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -61,21 +61,34 @@ main, footer { position: relative; z-index: 2; }
 .pill:hover { transform: scale(1.04); filter: brightness(1.06); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .12), 0 14px 28px -10px rgba(227, 6, 19, .75); }
 .pill:active { transform: scale(.96); }
 .pill.small { min-height: 38px; padding: 0 16px; font-size: 14px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), inset 0 -1px 0 rgba(0, 0, 0, .12), 0 6px 14px -8px rgba(227, 6, 19, .7); }
+.glassbtn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 980px; font: 550 16px/1 var(--f); letter-spacing: -.01em; color: var(--ink); text-decoration: none; background: var(--glass); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: var(--glass-edge); transition: transform .45s var(--liquid), color .25s; }
+.glassbtn:hover { transform: scale(1.04); color: var(--acc-ink); }
+.glassbtn:active { transform: scale(.96); }
 .textlink { font: 500 16px/1 var(--f); color: var(--ink); text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; padding-bottom: 4px; transition: background-size .35s var(--ease), color .2s; }
 .textlink:hover { color: var(--acc-ink); }
 
-/* ---------- vue 3D : posée sur la page, sans cadre ---------- */
+/* ---------- vue 3D : une vitre. Le pourtour est en verre dépoli : l'objet s'y trouble avant le bord,
+   ce qui sépare nettement la 3D du texte ---------- */
 #gl { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; display: block; opacity: 0; transition: opacity .8s; }
-body.has3d #gl { opacity: 1; }
+#glFrame { position: fixed; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .8s; }
+body.has3d #gl, body.has3d #glFrame { opacity: 1; }
+#glFrame::before, #glFrame::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 @media (min-width: 821px) {
-  /* les bords de la vue se fondent dans la page : un gros plan n'est jamais coupé net */
-  #gl { -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 93%, transparent), linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent); -webkit-mask-composite: source-in;
-        mask-image: linear-gradient(to right, transparent, #000 9%, #000 93%, transparent), linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent); mask-composite: intersect; }
+  #gl { border-radius: 44px; background: linear-gradient(165deg, rgba(255, 255, 255, .62), rgba(255, 255, 255, .22)); }
+  #glFrame { border-radius: 44px; overflow: hidden; box-shadow: inset 0 1.5px 0 #fff, inset 0 -1px 0 rgba(0, 0, 0, .05), inset 0 0 0 1px rgba(255, 255, 255, .7), 0 0 0 .5px rgba(0, 0, 0, .1), 0 40px 70px -40px rgba(0, 0, 0, .28); }
+  /* deux anneaux superposés : le flou augmente en approchant du bord */
+  #glFrame::before { background: rgba(255, 255, 255, .16); -webkit-backdrop-filter: blur(7px) saturate(1.15); backdrop-filter: blur(7px) saturate(1.15); --w: 74px; }
+  #glFrame::after { background: rgba(255, 255, 255, .22); -webkit-backdrop-filter: blur(22px) saturate(1.2); backdrop-filter: blur(22px) saturate(1.2); --w: 34px; }
+  #glFrame::before, #glFrame::after {
+    -webkit-mask-image: linear-gradient(to right, #000, transparent var(--w)), linear-gradient(to left, #000, transparent var(--w)), linear-gradient(to bottom, #000, transparent var(--w)), linear-gradient(to top, #000, transparent var(--w));
+            mask-image: linear-gradient(to right, #000, transparent var(--w)), linear-gradient(to left, #000, transparent var(--w)), linear-gradient(to bottom, #000, transparent var(--w)), linear-gradient(to top, #000, transparent var(--w)); }
 }
 
 /* ---------- navigation : une barre de verre qui flotte, avec une lentille qui glisse sur la section en cours ---------- */
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; padding-top: calc(env(safe-area-inset-top, 0px) + 10px); pointer-events: none; }
 .nav .inner { pointer-events: auto; position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 54px; max-width: 1080px; padding: 0 8px 0 24px; border-radius: 980px; background: var(--glass); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: var(--glass-edge); }
+.nav .inner::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(105deg, rgba(255, 255, 255, .75), rgba(255, 255, 255, 0) 22%, rgba(255, 255, 255, 0) 72%, rgba(255, 255, 255, .45)); }
+.nav .inner > * { position: relative; }
 .mark { font: 700 18px/1 var(--f); letter-spacing: -.035em; text-decoration: none; white-space: nowrap; color: var(--ink); }
 .nav ul { position: relative; display: flex; gap: 2px; list-style: none; margin: 0; padding: 0; }
 .nav ul a { position: relative; z-index: 1; display: block; font: 450 14.5px/1 var(--f); text-decoration: none; color: var(--ink-2); padding: 12px 14px; border-radius: 980px; transition: color .25s; }
@@ -108,7 +121,7 @@ h3 { font: 650 clamp(23px, 2vw, 30px)/1.12 var(--f); letter-spacing: -.03em; mar
 .hero h1 .ln > span { display: inline-block; }
 .hero .role { font: 650 clamp(22px, 2.1vw, 30px)/1.15 var(--f); letter-spacing: -.035em; max-width: 22ch; }
 .avail { font-size: 16px; color: var(--ink-3); }
-.actions { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; margin-top: 6px; }
+.actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
 .hint { display: inline-flex; align-items: center; gap: 8px; font: 400 14px/1 var(--f); color: var(--ink-3); margin-top: 10px; }
 .hint svg { width: 18px; height: 18px; }
 
@@ -184,7 +197,7 @@ h3 { font: 650 clamp(23px, 2vw, 30px)/1.12 var(--f); letter-spacing: -.03em; mar
 /* ---------- schémas ---------- */
 .viz { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 14px; opacity: 0; transform: translateY(14px); transition: opacity .6s, transform .8s var(--ease); pointer-events: none; }
 .viz.on { opacity: 1; transform: none; pointer-events: auto; }
-.panel { width: 100%; background: var(--bg-2); border-radius: 22px; overflow: hidden; padding: 6px 8px 10px; }
+.panel { width: 100%; background: var(--glass); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: var(--glass-edge); border-radius: 26px; overflow: hidden; padding: 6px 8px 10px; }
 .panel-h { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; padding: 14px 14px 6px; font-size: 14px; color: var(--ink-3); }
 .panel-h b { color: var(--ink); font-weight: 600; letter-spacing: -.015em; }
 .panel svg { display: block; width: 100%; height: auto; }
@@ -293,6 +306,7 @@ footer details p { margin-top: 8px; }
 @keyframes bootRun { to { transform: scaleX(.88); } }
 #boot.done .boot-bar i { animation: none; transform: scaleX(1); transition: transform .3s ease-out; }
 .js:not(.ready) main, .js:not(.ready) #gl { filter: blur(22px); }
+.js:not(.ready) #glFrame { opacity: 0; }
 .ready main, .ready #gl { animation: focusIn 1.25s var(--ease) both; }
 @keyframes focusIn { from { filter: blur(22px); transform: scale(.97); } to { filter: blur(0); transform: none; } }
 .ready.opened main, .ready.opened #gl { animation: none; }
@@ -314,6 +328,8 @@ footer details p { margin-top: 8px; }
   .menu-btn { display: inline-flex; }
   .nav .pill.small { display: none; }
   .nav { padding-left: 12px; padding-right: 12px; }
+  /* sur téléphone, rien ne défile autour de la barre : un bandeau mat la porte */
+  .nav::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: calc(var(--nav) + env(safe-area-inset-top, 0px)); background: var(--bg); z-index: -1; }
   .nav .inner { padding: 0 8px 0 20px; }
   .lens { display: none; }
   .nav.open ul { display: grid; position: absolute; top: calc(100% + 8px); left: 0; right: 0; gap: 0; padding: 14px 22px 20px; border-radius: 30px; background: rgba(255, 255, 255, .88); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: var(--glass-edge); animation: menuIn .5s var(--liquid); transform-origin: 50% 0; }
@@ -326,7 +342,11 @@ footer details p { margin-top: 8px; }
   .ch-stage .viz { padding: 10px 16px; justify-content: center; }
   .chapter { padding-top: 110px; }
   #gl { top: var(--nav); height: 42vh; z-index: 4; }
-  body.has3d #gl { background: var(--bg); border-bottom: 1px solid var(--line); }
+  body.has3d #gl { background: var(--bg); }
+  #glFrame { left: 0; right: 0; top: var(--nav); height: 42vh; z-index: 4; }
+  #glFrame::before { display: none; }
+  #glFrame::after { background: rgba(255, 255, 255, .3); -webkit-backdrop-filter: blur(14px) saturate(1.6); backdrop-filter: blur(14px) saturate(1.6); -webkit-mask-image: linear-gradient(to top, #000, transparent 34px); mask-image: linear-gradient(to top, #000, transparent 34px); box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .9); }
+  .ch-stage { border-bottom: 0; }
   .hero .inner { grid-template-columns: 1fr; }
   .hero { align-items: flex-start; padding-block: calc(var(--nav) + 42vh + 22px) 48px; min-height: auto; }
   .stats { padding-bottom: 60px; }
@@ -369,7 +389,7 @@ footer details p { margin-top: 8px; }
 @media print {
   @page { size: A4; margin: 14mm 13mm; }
   html, body { background: #fff; font-size: 10.5pt; }
-  .grain, .nav, .progress, #gl, #labels, .dragzone, .hud, #boot, #toast, .ch-stage, .hint, .wheel-hint, .btn, .copy, .panel, .actions, footer details, .foot-btn, .skip { display: none !important; }
+  .grain, .nav, .progress, #gl, #glFrame, #labels, .dragzone, .hud, #boot, #toast, .ch-stage, .hint, .wheel-hint, .btn, .copy, .panel, .actions, footer details, .foot-btn, .skip { display: none !important; }
   .js .rv, .js h2.disp, .js .beat:not(.live) .card, .js .beat:not(.live) .card.rv.in { opacity: 1 !important; transform: none !important; filter: none !important; }
   main { filter: none !important; animation: none !important; }
   .js:not(.ready) .hero h1 .ln > span { transform: none; }
