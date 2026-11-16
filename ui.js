@@ -75,6 +75,58 @@
     nums.forEach(n => io3.observe(n));
   }
 
+  /* ---------- carte de mobilité : un lieu survolé s'allume sur la carte et dans la liste ---------- */
+  const mapEl = $('#map'), stopsEl = $('#stops');
+  if (mapEl && stopsEl) {
+    const pane = mapEl.closest('.map-pane');
+    const linked = k => $$(`[data-stop="${k}"]`);
+    const setStop = k => {
+      $$('[data-stop].on').forEach(e => e.classList.remove('on'));
+      if (k) linked(k).forEach(e => e.classList.add('on'));
+      mapEl.classList.toggle('focus', !!k); stopsEl.classList.toggle('focus', !!k);
+    };
+    $$('[data-stop]').forEach(el => {
+      el.addEventListener('pointerenter', () => setStop(el.dataset.stop));
+      el.addEventListener('pointerleave', () => setStop(null));
+      el.addEventListener('focus', () => setStop(el.dataset.stop));
+      el.addEventListener('blur', () => setStop(null));
+    });
+    // une fois l'entrée jouée, les survols réagissent sans délai
+    if (pane) new MutationObserver((_, obs) => { if (pane.classList.contains('in')) { obs.disconnect(); setTimeout(() => pane.classList.add('done'), reduce ? 0 : 3600); } }).observe(pane, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  /* ---------- verre liquide : les bords de chaque vitre dévient ce qui passe dessous, comme une lentille.
+     Réfraction par filtre SVG dans backdrop-filter : Chromium seulement, les autres navigateurs gardent le flou. ---------- */
+  const chromium = (navigator.userAgentData && navigator.userAgentData.brands || []).some(b => b.brand === 'Chromium') || /Chrome\/\d+/.test(navigator.userAgent);
+  if (chromium && innerWidth > 820 && !matchMedia('(prefers-reduced-transparency: reduce)').matches) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const defs = document.createElementNS(NS, 'svg'); defs.id = 'lenses'; defs.setAttribute('aria-hidden', 'true'); defs.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+    document.body.appendChild(defs);
+    const made = new Map(); let n = 0;
+    // carte de déplacement : rouge = décalage horizontal, bleu = vertical, gris neutre au centre
+    function lensFilter(w, h, r, band, scale, blur) {
+      const key = [w, h, r, band, scale, blur].join('_'); if (made.has(key)) return made.get(key);
+      const id = 'lens' + (++n), b = Math.min(band, h * .42, w * .3), rr = Math.max(0, r - b * .6);
+      const map = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><defs><linearGradient id="x" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#f00"/></linearGradient><linearGradient id="y" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#00f"/></linearGradient><filter id="b" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="${(b * .42).toFixed(1)}"/></filter></defs><rect width="${w}" height="${h}" fill="#000"/><rect width="${w}" height="${h}" fill="url(#x)"/><rect width="${w}" height="${h}" fill="url(#y)" style="mix-blend-mode:screen"/><rect x="${b}" y="${b}" width="${w - 2 * b}" height="${h - 2 * b}" rx="${rr}" fill="#808080" filter="url(#b)"/></svg>`;
+      const f = document.createElementNS(NS, 'filter'); f.id = id; f.setAttribute('color-interpolation-filters', 'sRGB');
+      f.innerHTML = `<feImage href="data:image/svg+xml,${encodeURIComponent(map)}" x="0" y="0" width="${w}" height="${h}" preserveAspectRatio="none" result="m"/><feDisplacementMap in="SourceGraphic" in2="m" scale="${scale}" xChannelSelector="R" yChannelSelector="B" result="d"/><feGaussianBlur in="d" stdDeviation="${blur}"/>`;
+      defs.appendChild(f); made.set(key, id); return id;
+    }
+    const kinds = [['.nav .inner', 22, 64, 9], ['.glassbtn', 14, 44, 3], ['.btn', 14, 44, 3], ['.hud .cap', 11, 34, 3], ['#toast', 14, 44, 3], ['.chip', 9, 26, 2.5]];
+    function dress(el, band, scale, blur) {
+      const w = Math.round(el.offsetWidth), h = Math.round(el.offsetHeight); if (w < 8 || h < 8) return;
+      const r = Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0, h / 2);
+      const v = `url(#${lensFilter(w, h, Math.round(r), band, scale, blur)}) saturate(2.4) brightness(1.05)`;
+      el.style.backdropFilter = v; el.style.webkitBackdropFilter = v;
+    }
+    const ro = new ResizeObserver(es => es.forEach(e => { const k = e.target.__lens; if (k) dress(e.target, k[1], k[2], k[3]); }));
+    kinds.forEach(k => $$(k[0]).forEach(el => { el.__lens = k; ro.observe(el); }));
+    root.classList.add('lg');
+  }
+  /* un reflet suit le pointeur le long de la barre de navigation */
+  const navIn = $('.nav .inner');
+  if (navIn && !reduce) addEventListener('pointermove', e => { const r = navIn.getBoundingClientRect(); navIn.style.setProperty('--mx', Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100)).toFixed(1) + '%'); }, { passive: true });
+
   /* ---------- menu mobile ---------- */
   const mb = $('#menuBtn');
   const setMenu = o => { hdr.classList.toggle('open', o); mb.setAttribute('aria-expanded', String(o)); mb.setAttribute('aria-label', o ? 'Fermer le menu' : 'Menu'); };

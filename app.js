@@ -433,38 +433,35 @@ function buildWheel(mats) {
   g.userData.leds = leds;
   return g;
 }
-let screenOff = null;
 function drawScreen(t) {
   if (!screenCtx) return;
-  if (!screenOff) { const o = document.createElement('canvas'); o.width = 900; o.height = 700; screenOff = o.getContext('2d'); }
-  drawScreenInner(t, screenOff);
-  const C = screenCtx, H2 = C.canvas.height; C.fillStyle = '#05070a'; C.fillRect(0, 0, 900, H2); C.drawImage(screenOff.canvas, 0, (H2 - 700) / 2);
+  drawScreenInner(t, screenCtx);
   screenTex.needsUpdate = true;
 }
+// 900 x 540 : la dalle 5:3 du volant
 function drawScreenInner(t, c) {
-  const W = 900, H = 700;
+  const W = 900, H = c.canvas.height;
   c.fillStyle = '#05070a'; c.fillRect(0, 0, W, H);
-  if (screenMode === 1 && (t % 6) < 2.4) { c.fillStyle = '#0c0f12'; c.font = '500 26px Geist, sans-serif'; c.fillText('luminosité 0 %', 30, H - 30); screenTex.needsUpdate = true; return; }
+  c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+  if (screenMode === 1 && (t % 6) < 2.4) { c.fillStyle = '#0c0f12'; c.font = '500 24px Geist, sans-serif'; c.fillText('luminosité 0 %', 30, H - 26); return; }
   const box = (x, y, w, h) => { c.fillStyle = '#121a22'; c.fillRect(x, y, w, h); c.strokeStyle = '#26323d'; c.lineWidth = 2; c.strokeRect(x, y, w, h); };
-  c.textBaseline = 'alphabetic';
   // top bar: battery
-  box(20, 20, 860, 90); const soc = .58 + .04 * Math.sin(t * .2);
-  c.fillStyle = '#8fd14f'; c.fillRect(250, 38, 400 * soc, 54); c.strokeStyle = '#d9e3ea'; c.strokeRect(250, 38, 400, 54);
-  c.fillStyle = '#d9e3ea'; c.font = '600 22px Arial'; c.fillText('SOC', 40, 58); c.font = '800 44px Arial'; c.fillText((soc * 100).toFixed(1), 40, 98);
-  c.font = '600 22px Arial'; c.fillText('TEMP', 690, 58); c.font = '800 44px Arial'; c.fillText(String(Math.round(40 + 2 * Math.sin(t * .3))), 690, 98);
+  box(20, 16, 860, 78); const soc = .58 + .04 * Math.sin(t * .2);
+  c.fillStyle = '#8fd14f'; c.fillRect(250, 31, 400 * soc, 48); c.strokeStyle = '#d9e3ea'; c.strokeRect(250, 31, 400, 48);
+  c.fillStyle = '#d9e3ea'; c.font = '600 20px Arial'; c.fillText('SOC', 40, 44); c.font = '800 40px Arial'; c.fillText((soc * 100).toFixed(1), 40, 82);
+  c.font = '600 20px Arial'; c.fillText('TEMP', 690, 44); c.font = '800 40px Arial'; c.fillText(String(Math.round(40 + 2 * Math.sin(t * .3))), 690, 82);
   // tyre / motor blocks
-  [[20, 130], [470, 130], [20, 330], [470, 330]].forEach(([x, y], i) => { box(x, y, 410, 180); c.fillStyle = '#7c8b97'; c.font = '600 20px Arial'; c.fillText(i % 2 ? 'MOTEUR °C' : 'PNEU bar', x + 20, y + 40); c.fillStyle = '#ffffff'; c.font = '800 70px Arial'; c.fillText(i % 2 ? String(Math.round(64 + 3 * Math.sin(t * .4 + i))) : (26 + .6 * Math.sin(t * .3 + i)).toFixed(1), x + 20, y + 125); });
+  [[20, 108], [470, 108], [20, 256], [470, 256]].forEach(([x, y], i) => { box(x, y, 410, 134); c.fillStyle = '#7c8b97'; c.font = '600 19px Arial'; c.fillText(i % 2 ? 'MOTEUR °C' : 'PNEU bar', x + 20, y + 34); c.fillStyle = '#ffffff'; c.font = '800 62px Arial'; c.fillText(i % 2 ? String(Math.round(64 + 3 * Math.sin(t * .4 + i))) : (26 + .6 * Math.sin(t * .3 + i)).toFixed(1), x + 20, y + 104); });
   // delta bar
-  const d = 2 * Math.sin(t * .5); c.fillStyle = d > 0 ? '#e2061c' : '#2fb562'; c.beginPath(); c.moveTo(250, 530); c.lineTo(650, 530); c.lineTo(610, 590); c.lineTo(290, 590); c.closePath(); c.fill();
-  c.fillStyle = '#fff'; c.font = '800 46px Arial'; c.textAlign = 'center'; c.fillText((d > 0 ? '+' : '') + d.toFixed(2), 450, 578); c.textAlign = 'left';
-  c.fillStyle = '#7c8b97'; c.font = '500 20px Geist, sans-serif'; c.fillText('données fictives', 30, 680);
+  const d = 2 * Math.sin(t * .5); c.fillStyle = d > 0 ? '#e2061c' : '#2fb562'; c.beginPath(); c.moveTo(250, 408); c.lineTo(650, 408); c.lineTo(614, 466); c.lineTo(286, 466); c.closePath(); c.fill();
+  c.fillStyle = '#fff'; c.font = '800 44px Arial'; c.textAlign = 'center'; c.fillText((d > 0 ? '+' : '') + d.toFixed(2), 450, 453); c.textAlign = 'left';
+  c.fillStyle = '#7c8b97'; c.font = '500 19px Geist, sans-serif'; c.fillText('données fictives', 30, H - 22);
   if (screenMode === 2) {
-    c.fillStyle = 'rgba(5,7,10,.9)'; c.fillRect(0, 0, W, H); c.fillStyle = '#d9e3ea'; c.font = '600 26px Geist, sans-serif'; c.fillText('décodage bit à bit', 40, 70);
-    const v = (Math.floor(t * 2) * 2654435761) >>> 0; for (let b = 0; b < 16; b++) { const on = (v >> b) & 1; const x = 40 + b * 52; c.fillStyle = on ? (b > 8 ? '#e2061c' : '#2f6fd8') : '#1a232c'; c.fillRect(x, 120, 44, 70); c.fillStyle = '#fff'; c.font = '700 30px Geist, sans-serif'; c.fillText(String(on), x + 13, 166); }
-    ['b0–1  mode', 'b2–5  carto', 'b6    drapeau', 'b7–15 valeur'].forEach((s, i) => { c.fillStyle = '#d9e3ea'; c.font = '500 30px Geist, sans-serif'; c.fillText(s, 40, 280 + i * 60); });
+    c.fillStyle = 'rgba(5,7,10,.92)'; c.fillRect(0, 0, W, H); c.fillStyle = '#d9e3ea'; c.font = '600 26px Geist, sans-serif'; c.fillText('décodage bit à bit', 40, 62);
+    const v = (Math.floor(t * 2) * 2654435761) >>> 0; for (let b = 0; b < 16; b++) { const on = (v >> b) & 1; const x = 40 + b * 52; c.fillStyle = on ? (b > 8 ? '#e2061c' : '#2f6fd8') : '#1a232c'; c.fillRect(x, 96, 44, 70); c.fillStyle = '#fff'; c.font = '700 30px Geist, sans-serif'; c.fillText(String(on), x + 13, 142); }
+    ['b0–1  mode', 'b2–5  carto', 'b6    drapeau', 'b7–15 valeur'].forEach((s, i) => { c.fillStyle = '#d9e3ea'; c.font = '500 30px Geist, sans-serif'; c.fillText(s, 40, 246 + i * 58); });
   }
-  if (screenMode === 3) { c.fillStyle = '#e2061c'; c.fillRect(0, H - 130, W, 130); c.fillStyle = '#fff'; c.font = '800 46px Arial'; c.fillText('ALARME', 40, H - 52); c.font = '500 26px Geist, sans-serif'; c.fillText('maintenue par compteur', 280, H - 56); }
-  screenTex.needsUpdate = true;
+  if (screenMode === 3) { c.fillStyle = '#e2061c'; c.fillRect(0, H - 118, W, 118); c.fillStyle = '#fff'; c.font = '800 46px Arial'; c.fillText('ALARME', 40, H - 44); c.font = '500 26px Geist, sans-serif'; c.fillText('maintenue par compteur', 280, H - 48); }
 }
 
 /* ================= Formula E single-seater (generic shape, GEN4 dimensions) ================= */
@@ -566,7 +563,7 @@ function loadCar() {
     const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
     const gl = await loader.parseAsync(glbBuffer(VOLANT), '');
     const v = gl.scene; v.scale.setScalar(1000);
-    const sc = document.createElement('canvas'); sc.width = 900; sc.height = 830; screenCtx = sc.getContext('2d');
+    const sc = document.createElement('canvas'); sc.width = 900; sc.height = 540; screenCtx = sc.getContext('2d');
     screenTex = new THREE.CanvasTexture(sc); screenTex.colorSpace = THREE.SRGBColorSpace; screenTex.anisotropy = 8; screenTex.flipY = false;
     v.traverse(o => { if (!o.isMesh) return; o.castShadow = o.receiveShadow = true; const mt = o.material, n = mt.name || '';
       mt.side = THREE.DoubleSide; mt.needsUpdate = true;
@@ -574,6 +571,7 @@ function loadCar() {
       if (n === 'ecran') { o.material = new THREE.MeshBasicMaterial({ map: screenTex, toneMapped: false }); fe.mats.push(o.material); return; }
       if (/^led_/.test(n)) { o.material = mt.clone(); o.material.emissive = mt.color.clone(); o.material.emissiveIntensity = 1.6; (P.ledMeshes ||= []).push(o); fe.mats.push(o.material); const sp = new THREE.Sprite(glowMat(o.material.emissive)); sp.scale.setScalar(.018); o.add(sp); fe.mats.push(sp.material); return; }
       if (/capuchon/.test(o.name)) (P.buttons ||= []).push(o);
+      if (/^Rotary[345]$/.test(o.parent?.name || '')) { (P.rotaries ||= []).push(o); if (/^alu_|blanc_repere/.test(n)) (P.knobs ||= []).push(o); }
       if (n === 'carbone' || n === 'carbone_mat') { mt.envMapIntensity = 1; }
       if (!fe.mats.includes(mt)) fe.mats.push(mt); });
     P.wheel.add(v); fe.wheelLoaded = true; needs = true;
@@ -1092,14 +1090,20 @@ addEventListener('pointerup', endDrag); addEventListener('pointercancel', endDra
 
 /* ================= layout & loop ================= */
 let mobile = false, needs = true, last = performance.now(), T = 0;
+const BLEED = { l: 110, t: 30 }; let safe = null;
 // on desktop the 3D lives in a framed panel aligned with the right-hand column
 function placePanel() {
   const st = document.querySelector('.ch-stage'), drag2 = document.getElementById('drag'), hud2 = document.getElementById('hud'), frame = document.getElementById('glFrame');
-  if (mobile || !st) { for (const el of [canvas, drag2]) { el.style.left = el.style.top = el.style.width = el.style.height = el.style.right = el.style.bottom = ''; } hud2.style.right = hud2.style.bottom = ''; if (frame) frame.style.left = frame.style.top = frame.style.width = frame.style.height = ''; return; }
+  if (mobile || !st) { safe = null; for (const el of [canvas, drag2]) { el.style.left = el.style.top = el.style.width = el.style.height = el.style.right = el.style.bottom = ''; } hud2.style.right = hud2.style.bottom = ''; if (frame) frame.style.left = frame.style.top = frame.style.width = frame.style.height = ''; return; }
   const r0 = st.getBoundingClientRect(), nav = 64, top = nav + 22, bottom = 22, right = 24, r = { left: r0.left - 12, width: innerWidth - right - (r0.left - 12) };
-  canvas.style.left = r.left + 'px'; canvas.style.top = top + 'px'; canvas.style.width = r.width + 'px'; canvas.style.height = (innerHeight - top - bottom) + 'px';
-  Object.assign(drag2.style, { left: r.left + 'px', top: top + 'px', width: r.width + 'px', height: (innerHeight - top - bottom) + 'px', right: 'auto', bottom: 'auto' });
-  if (frame) Object.assign(frame.style, { left: r.left + 'px', top: top + 'px', width: r.width + 'px', height: (innerHeight - top - bottom) + 'px' }); // the glass rim sits exactly over the 3D view
+  // "safe" = the column the object is framed in; the canvas bleeds beyond it so its feathered edges fall outside
+  const sh = innerHeight - top - bottom; safe = { left: r.left, top, width: r.width, height: sh };
+  const cl = Math.max(0, r.left - BLEED.l), ct = Math.max(0, top - BLEED.t), cw = innerWidth - cl, chh = innerHeight - ct;
+  safe.ox = (r.left + r.width / 2) - (cl + cw / 2); safe.oy = (top + sh / 2) - (ct + chh / 2); safe.kw = r.width / cw; safe.kh = sh / chh;
+  const box = { left: cl + 'px', top: ct + 'px', width: cw + 'px', height: chh + 'px' };
+  Object.assign(canvas.style, box);
+  Object.assign(drag2.style, { left: r.left + 'px', top: top + 'px', width: r.width + 'px', height: sh + 'px', right: 'auto', bottom: 'auto' });
+  if (frame) Object.assign(frame.style, box); // the blur bands sit exactly over the 3D view
   hud2.style.right = (right + 30) + 'px'; hud2.style.bottom = (bottom + 30) + 'px';
 }
 function resize() {
@@ -1122,7 +1126,9 @@ function frame(now) {
   const k = reduce ? 1 : 1 - Math.exp(-dt * 3.0);
   if (!dragging && now - lastInteract > 2200) { const kk = 1 - Math.exp(-dt * 1.2); uYaw = damp(uYaw, 0, kk); uPitch = damp(uPitch, 0, kk); }
   const dist = camera.position.length(), halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * dist, halfW = halfH * camera.aspect;
-  const fit = Math.min(halfW * .86, halfH * .78);
+  const kw = safe ? safe.kw : 1, kh = safe ? safe.kh : 1; // the object is framed in the safe column, not in the bled canvas
+  const fit = Math.min(halfW * kw * .84, halfH * kh * .78);
+  const offX = safe ? safe.ox / (canvas.clientWidth / 2) * halfW : 0, offY = safe ? -safe.oy / (canvas.clientHeight / 2) * halfH : 0;
   let any = false, lead = null, leadW = 0, leadR = 2;
   let fogW = 0, fogCol = null;
   for (const name in objects) {
@@ -1141,7 +1147,7 @@ function frame(now) {
     const leaving = !tgt, tw2 = 1 - c.w, eio = tw2 * tw2;
     const sc = fit / radius * c.s * (leaving ? 1 + .55 * eio : .7 + .3 * c.w);
     const envLow = O.env && name !== 'fe' ? .2 : 0; const ax = 0, ay = (mobile ? -.02 : -.04) - envLow * (1 - Math.min(1, (c.s - 1) / 1.2));
-    const pos = new THREE.Vector3().addScaledVector(right, ax * halfW).addScaledVector(upv, ay * halfH);
+    const pos = new THREE.Vector3().addScaledVector(right, ax * halfW + offX).addScaledVector(upv, ay * halfH * kh + offY);
     if (leaving) pos.addScaledVector(right, -eio * halfW * .55).addScaledVector(upv, eio * halfH * .15); else pos.addScaledVector(upv, -tw2 * halfH * .3);
     pos.y += reduce ? 0 : Math.sin(T * .8) * .03;
     O.holder.position.copy(pos); O.holder.scale.setScalar(sc);
@@ -1181,6 +1187,7 @@ function animate(name, O, c, dt, a) {
     if (userPage !== null && T > userPageUntil) userPage = null;
     screenMode = userPage ?? (BEATS[active]?.fe?.screen ?? 0);
     if (pressed) { const k = Math.max(0, 1 - (T - pressT) / .25); pressed.userData.z0 ??= pressed.position.z; pressed.position.z = pressed.userData.z0 - .0025 * Math.sin(k * PI); if (k <= 0) { pressed.position.z = pressed.userData.z0; pressed = null; } }
+    if (P.knobs) for (const k of P.knobs) { const tz = k.parent.userData.tz; if (tz != null && Math.abs(tz - k.rotation.z) > .002) { k.rotation.z += (tz - k.rotation.z) * Math.min(1, dt * 12); needs = true; } }
     if (P.ledMeshes) { const hov = !mobile ? Math.max(0, 1 - Math.hypot(px - .45, py + .05) * 1.6) : 0; P.ledMeshes.forEach((m, i) => { const on = ((T * (3 + hov * 9) - i * .35) % 3) < 1.6; m.material.emissiveIntensity = on ? 1.6 + hov * 2.5 : .15; }); }
     if (screenCtx && T - lastDraw > 1 / 20) { drawScreen(T); lastDraw = T; }
     // race: rolling road, spinning wheels, the two other cars trading places
@@ -1242,7 +1249,7 @@ function drawLabels() {
   pts.sort((a, b) => a.y - b.y).forEach((p, k) => {
     let el = labelEls[p.i]; if (!el) { el = document.createElement('div'); el.className = 'lbl3d'; el.innerHTML = '<i></i><b></b><span></span>'; labelBox.appendChild(el); labelEls[p.i] = el; }
     el.querySelector('span').textContent = p.L.t;
-    const tx = Math.max(minX - 70, rect.left + 200) - p.x, ty = cy + (k - (pts.length - 1) / 2) * 42 - p.y, len = Math.hypot(tx, ty), ang = Math.atan2(ty, tx);
+    const tx = Math.max(minX - 70, (safe ? safe.left : rect.left) + 200) - p.x, ty = cy + (k - (pts.length - 1) / 2) * 42 - p.y, len = Math.hypot(tx, ty), ang = Math.atan2(ty, tx);
     el.style.transform = `translate(${p.x}px, ${p.y}px)`;
     const line = el.querySelector('b'); line.style.width = len + 'px'; line.style.transform = `rotate(${ang}rad)`;
     const sp = el.querySelector('span'); sp.style.transform = `translate(calc(${tx}px - 100%), calc(${ty}px - 50%))`;
@@ -1255,7 +1262,10 @@ drag.addEventListener('pointerup', e => {
   const fe = objects.fe; if (!BEATS[active]?.fe || !fe.content.userData.parts.buttons) return;
   const r = canvas.getBoundingClientRect(); ndc.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
   ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(fe.content.userData.parts.buttons, false)[0];
-  if (hit) { pressed = hit.object; pressT = T; const pages = [0, 2, 3]; userPage = pages[(pages.indexOf(userPage ?? screenMode) + 1) % 3]; userPageUntil = T + 6; needs = true; }
+  if (hit) { if (pressed) pressed.position.z = pressed.userData.z0; pressed = /capuchon/.test(hit.object.parent?.name || '') ? hit.object.parent : hit.object; pressT = T; const pages = [0, 2, 3]; userPage = pages[(pages.indexOf(userPage ?? screenMode) + 1) % 3]; userPageUntil = T + 6; needs = true; return; }
+  // un clic sur un sélecteur rotatif le fait avancer d'un cran (30°)
+  const P2 = fe.content.userData.parts, rh = P2.rotaries && ray.intersectObjects(P2.rotaries, false)[0];
+  if (rh) { const g = rh.object.parent; g.userData.tz = (g.userData.tz ?? 0) - PI / 6; needs = true; }
 });
 let absUntil = 0, audioCtx = null;
 document.getElementById('btnAbs')?.addEventListener('click', () => {
