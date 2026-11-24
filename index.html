@@ -433,6 +433,28 @@
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}
 </script>
+<!-- Statistiques de visite (GoatCounter, sans cookies).
+     Un appareil ouvert une fois avec l'adresse terminée par #moi est compté à part, sous « moi » ; #pas-moi annule. -->
+<script>
+(function () {
+  var K = 'jc-moi', isMe = function () { try { return localStorage.getItem(K) === '1'; } catch (e) { return false; } };
+  function apply() {
+    var h = location.hash; if (h !== '#moi' && h !== '#pas-moi') return;
+    try { if (h === '#moi') localStorage.setItem(K, '1'); else localStorage.removeItem(K); } catch (e) {}
+    history.replaceState(null, '', location.pathname + location.search);
+    var say = function () {
+      var t = document.getElementById('toast'); if (!t) return;
+      t.textContent = isMe() ? 'Cet appareil est compté à part, sous « moi »' : 'Cet appareil est de nouveau compté comme un visiteur';
+      t.classList.add('on'); setTimeout(function () { t.classList.remove('on'); }, 3500);
+    };
+    document.readyState === 'complete' ? say() : addEventListener('load', say);
+  }
+  apply(); addEventListener('hashchange', apply);   // fonctionne aussi si #moi est ajouté à une page déjà ouverte
+  // tes visites arrivent sur la page « /moi », avec « moi » comme provenance
+  if (isMe()) window.goatcounter = { path: function () { return '/moi'; }, referrer: function () { return 'moi'; } };
+})();
+</script>
+<script data-goatcounter="https://jcr0.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 <script src="ui.js"></script>
 <script type="module" src="viz.js"></script>
 <script type="module" src="app.js"></script>
