@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Liste de Noël · Julien</title>
+<meta name="description" content="Ma liste de Noël 2026.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b0b0c">
+<meta property="og:title" content="Liste de Noël · Julien">
+<meta property="og:description" content="Les idées cadeaux de Julien pour Noël 2026.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0b0c'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Arial,sans-serif' font-weight='700' font-size='15' fill='%23fff'%3EJC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&display=swap">
+<style>
+  :root {
+    --bg: #0b0b0c;
+    --card: #141416;
+    --line: #26262a;
+    --text: #f4f4f5;
+    --muted: #a1a1aa;
+    --accent: #e5484d;
+    --gold: #d4a64a;
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(1200px 600px at 50% -200px, rgba(229,72,77,.16), transparent 70%),
+      var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+
+  /* Neige légère */
+  .snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .snow i {
+    position: absolute; top: -10px; width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(255,255,255,.55); animation: fall linear infinite;
+  }
+  @keyframes fall { to { transform: translate3d(var(--dx, 20px), 105vh, 0); } }
+  @media (prefers-reduced-motion: reduce) { .snow { display: none; } }
+
+  .wrap { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 72px 24px 56px; }
+
+  header { text-align: center; margin-bottom: 56px; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px;
+  }
+  .tag b { color: var(--accent); font-weight: 600; }
+  h1 {
+    font-size: clamp(40px, 7vw, 68px); font-weight: 750; letter-spacing: -.035em; line-height: 1.05;
+    margin: 22px 0 14px;
+  }
+  h1 span { color: var(--accent); }
+  .lead { color: var(--muted); font-size: 17px; max-width: 520px; margin: 0 auto; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .card:hover { transform: translateY(-4px); border-color: #3a3a40; box-shadow: 0 20px 50px -20px rgba(0,0,0,.7); }
+
+  .media {
+    position: relative; aspect-ratio: 4 / 3; background: #fff;
+    display: grid; place-items: center; overflow: hidden;
+  }
+  .media img { width: 100%; height: 100%; object-fit: contain; padding: 22px; transition: transform .4s ease; }
+  .card:hover .media img { transform: scale(1.04); }
+  .media .fallback { display: none; font-size: 64px; }
+  .media.noimg { background: linear-gradient(135deg, #1c1c20, #111113); }
+  .media.noimg .fallback { display: block; }
+  .num {
+    position: absolute; top: 14px; left: 14px; font-size: 12px; font-weight: 600;
+    background: var(--bg); color: var(--text); border-radius: 999px; padding: 4px 10px;
+  }
+
+  .body { padding: 24px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+  .brand { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  h2 { font-size: 22px; font-weight: 650; letter-spacing: -.02em; line-height: 1.25; }
+  .desc { color: #d4d4d8; font-size: 15px; }
+
+  .specs { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+  .specs li { font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; }
+
+  .note {
+    font-size: 14px; color: var(--text); background: rgba(212,166,74,.08);
+    border: 1px solid rgba(212,166,74,.3); border-radius: 10px; padding: 10px 12px;
+  }
+  .note strong { color: var(--gold); }
+
+  .foot { margin-top: auto; padding-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .price { font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+  .price small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+    font-size: 14px; font-weight: 600; border-radius: 10px; padding: 10px 16px;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.primary:hover { background: #f2555a; }
+  .btn.ghost { border: 1px solid var(--line); color: var(--text); }
+  .btn.ghost:hover { border-color: #52525b; }
+  .btn svg { width: 14px; height: 14px; }
+
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 56px; }
+  footer a { color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="snow" id="snow" aria-hidden="true"></div>
+
+<main class="wrap">
+  <header>
+    <span class="tag">🎄 <b>Noël 2026</b> · Julien</span>
+    <h1>Ma liste de <span>Noël</span></h1>
+    <p class="lead">Quelques idées si vous ne savez pas quoi m'offrir. Les liens mènent directement aux bons produits.</p>
+  </header>
+
+  <section class="grid">
+
+    <!-- 1. Écran -->
+    <article class="card">
+      <div class="media">
+        <span class="num">01</span>
+        <img src="https://media.ldlc.com/r1600/ld/products/00/05/79/00/LD0005790095_1_0005806467_0006017073.jpg"
+             alt="Écran incurvé Samsung Odyssey G5 G55T 34 pouces" loading="lazy" referrerpolicy="no-referrer" data-fallback>
+        <span class="fallback">🖥️</span>
+      </div>
+      <div class="body">
+        <span class="brand">Samsung</span>
+        <h2>Écran PC Odyssey G5 G55T 34″</h2>
+        <p class="desc">Écran ultra-large incurvé, très fluide, idéal pour le sim racing et le travail.</p>
+        <ul class="specs">
+          <li>34″ incurvé 1000R</li>
+          <li>3440 × 1440</li>
+          <li>165 Hz</li>
+          <li>1 ms</li>
+          <li>FreeSync Premium</li>
+        </ul>
+        <p class="note"><strong>Référence exacte :</strong> LC34G55TWWPXEN (version 34 pouces)</p>
+        <div class="foot">
+          <div class="price">≈ 300 €<small>prix indicatif, novembre 2026</small></div>
+          <div class="btns">
+            <a class="btn primary" href="https://www.ldlc.com/fiche/PB00544361.html" target="_blank" rel="noopener">LDLC
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+            <a class="btn ghost" href="https://www.samsung.com/fr/monitors/gaming/odyssey-g5-34-inch-165hz-curved-ultra-wqhd-lc34g55twwpxen/" target="_blank" rel="noopener">Samsung</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2. Module palettes -->
+    <article class="card">
+      <div class="media">
+        <span class="num">02</span>
+        <img src="https://cdn.shopify.com/s/files/1/0591/1216/1363/files/podium-advanced-paddle-module-8486108.jpg?v=1784986884"
+             alt="Module de palettes Simube Podium Advanced Paddle Module" loading="lazy" referrerpolicy="no-referrer" data-fallback>
+        <span class="fallback">🏎️</span>
+      </div>
+      <div class="body">
+        <span class="brand">Simube</span>
+        <h2>Podium Advanced Paddle Module</h2>
+        <p class="desc">Module de palettes pour mon volant Fanatec : cage en aluminium usiné, palettes en carbone, capteurs à effet Hall et palettes analogiques d'embrayage.</p>
+        <ul class="specs">
+          <li>Aluminium CNC</li>
+          <li>Carbone 3 mm</li>
+          <li>Shifters magnétiques</li>
+          <li>Compatible Fanatec</li>
+        </ul>
+        <p class="note"><strong>Couleur :</strong> noir (Black), déjà sélectionnée via le lien</p>
+        <div class="foot">
+          <div class="price">≈ 85 $<small>prix indicatif, hors livraison</small></div>
+          <div class="btns">
+            <a class="btn primary" href="https://simube.com/products/podium-advanced-paddle-module?variant=43324694528083" target="_blank" rel="noopener">Simube
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <footer>
+    <p>Merci d'avance 🎁 · <a href="/">juliencarr0.github.io</a></p>
+  </footer>
+</main>
+
+<script>
+  // Si une image ne charge pas, on affiche un emoji à la place
+  document.querySelectorAll('img[data-fallback]').forEach(function (img) {
+    function fail() { var m = img.parentElement; if (m) { m.classList.add('noimg'); } img.remove(); }
+    if (img.complete && img.naturalWidth === 0) fail();
+    img.addEventListener('error', fail);
+  });
+
+  // Neige
+  (function () {
+    var s = document.getElementById('snow');
+    for (var i = 0; i < 40; i++) {
+      var f = document.createElement('i');
+      var size = 2 + Math.random() * 3;
+      f.style.left = Math.random() * 100 + 'vw';
+      f.style.width = f.style.height = size + 'px';
+      f.style.opacity = (0.25 + Math.random() * 0.5).toFixed(2);
+      f.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px');
+      f.style.animationDuration = (8 + Math.random() * 10) + 's';
+      f.style.animationDelay = (-Math.random() * 18) + 's';
+      s.appendChild(f);
+    }
+  })();
+</script>
+</body>
+</html>
