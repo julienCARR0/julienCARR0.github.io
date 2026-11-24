@@ -114,6 +114,25 @@
   .btn.ghost:hover { border-color: #52525b; }
   .btn svg { width: 14px; height: 14px; }
 
+  .price s { font-size: 15px; font-weight: 500; color: var(--muted); margin-left: 6px; }
+  .badge {
+    position: absolute; top: 14px; right: 14px; font-size: 12px; font-weight: 700;
+    background: var(--accent); color: #fff; border-radius: 999px; padding: 4px 10px;
+  }
+  .shops { list-style: none; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .shops li + li { border-top: 1px solid var(--line); }
+  .shops a {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 11px 14px; color: var(--text); text-decoration: none; font-size: 14px;
+    transition: background .2s ease;
+  }
+  .shops a:hover { background: #1c1c20; }
+  .shops .shop { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .shops .best { font-size: 11px; font-weight: 700; color: #fff; background: var(--accent); border-radius: 6px; padding: 2px 7px; }
+  .shops .meta { color: var(--muted); font-size: 12px; }
+  .shops .p { font-weight: 700; white-space: nowrap; }
+  .updated { text-align: center; color: var(--muted); font-size: 13px; margin: -32px 0 32px; }
+
   footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 56px; }
   footer a { color: var(--text); }
 </style>
@@ -135,6 +154,7 @@
     <article class="card">
       <div class="media">
         <span class="num">01</span>
+        <span class="badge">Black Friday −23 %</span>
         <img src="https://media.ldlc.com/r1600/ld/products/00/05/79/00/LD0005790095_1_0005806467_0006017073.jpg"
              alt="Écran incurvé Samsung Odyssey G5 G55T 34 pouces" loading="lazy" referrerpolicy="no-referrer" data-fallback>
         <span class="fallback">🖥️</span>
@@ -151,12 +171,22 @@
           <li>FreeSync Premium</li>
         </ul>
         <p class="note"><strong>Référence exacte :</strong> LC34G55TWWPXEN (version 34 pouces)</p>
+        <ul class="shops">
+          <li><a href="https://www.fnac.com/SearchResult/ResultList.aspx?Search=LC34G55TWWPXEN" target="_blank" rel="noopener">
+            <span class="shop">Fnac <span class="best">Meilleur prix</span></span>
+            <span><span class="p">229,99 €</span> <span class="meta">· livraison offerte</span></span></a></li>
+          <li><a href="https://www.cdiscount.com/search/10/lc34g55twwpxen.html" target="_blank" rel="noopener">
+            <span class="shop">Cdiscount</span>
+            <span><span class="p">229,99 €</span> <span class="meta">· + 4,99 € livraison</span></span></a></li>
+          <li><a href="https://www.darty.com/nav/achat/informatique/accessoire_bureau/ecran_plat/samsung_odyssey_g5_-_g55t.html" target="_blank" rel="noopener">
+            <span class="shop">Darty</span>
+            <span><span class="p">229,99 €</span> <span class="meta">· + 7,99 € livraison</span></span></a></li>
+        </ul>
         <div class="foot">
-          <div class="price">≈ 300 €<small>prix indicatif, novembre 2026</small></div>
+          <div class="price">229,99 €<s>299,99 €</s><small>offre Black Friday, prix relevés le 24/11/2026</small></div>
           <div class="btns">
-            <a class="btn primary" href="https://www.ldlc.com/fiche/PB00544361.html" target="_blank" rel="noopener">LDLC
+            <a class="btn primary" href="https://www.fnac.com/SearchResult/ResultList.aspx?Search=LC34G55TWWPXEN" target="_blank" rel="noopener">Voir à la Fnac
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
-            <a class="btn ghost" href="https://www.samsung.com/fr/monitors/gaming/odyssey-g5-34-inch-165hz-curved-ultra-wqhd-lc34g55twwpxen/" target="_blank" rel="noopener">Samsung</a>
           </div>
         </div>
       </div>
@@ -166,6 +196,7 @@
     <article class="card">
       <div class="media">
         <span class="num">02</span>
+        <span class="badge">Promo −15 %</span>
         <img src="https://cdn.shopify.com/s/files/1/0591/1216/1363/files/podium-advanced-paddle-module-8486108.jpg?v=1784986884"
              alt="Module de palettes Simube Podium Advanced Paddle Module" loading="lazy" referrerpolicy="no-referrer" data-fallback>
         <span class="fallback">🏎️</span>
@@ -182,7 +213,7 @@
         </ul>
         <p class="note"><strong>Couleur :</strong> noir (Black), déjà sélectionnée via le lien</p>
         <div class="foot">
-          <div class="price">≈ 85 $<small>prix indicatif, hors livraison</small></div>
+          <div class="price">≈ 73 €<s>≈ 86 €</s><small>soldé à 84,15 $ au lieu de 99 $ · livraison et douane incluses</small></div>
           <div class="btns">
             <a class="btn primary" href="https://simube.com/products/podium-advanced-paddle-module?variant=43324694528083" target="_blank" rel="noopener">Simube
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
