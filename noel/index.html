@@ -143,6 +143,8 @@
   .specs li { font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 7px; padding: 3px 8px; }
   .note { font-size: 13px; background: rgba(243,192,79,.07); border: 1px solid rgba(243,192,79,.28); border-radius: 9px; padding: 8px 10px; }
   .note strong { color: var(--gold); }
+  .note code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: #0b0b0c; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; }
+  .copy { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; color: #0b0b0c; background: var(--gold); border: 0; border-radius: 6px; padding: 2px 8px; margin-left: 4px; }
   .price { font-size: 22px; font-weight: 750; letter-spacing: -.02em; }
   .price s { font-size: 14px; font-weight: 500; color: var(--muted); margin-left: 6px; }
   .price small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
@@ -277,6 +279,18 @@ const ITEMS = [
     shops: [
       { name: 'Peak Design', best: true, p: '63,99 €', meta: 'site officiel', url: 'https://www.peakdesign.com/eu/products/capture?Color=Silver' }
     ]
+  },
+  {
+    color: '#1e3a5f', ribbon: '#e5484d', emoji: '🧥',
+    img: 'https://assets.thenorthface.eu/images/t_img/c_fill,f_auto,h_2500,e_sharpen:60,w_2000/v1753724182/NF0A3C8DGOB-HERO/Mens-1996-Retro-Nuptse-Jacket-TNF-Summit-NavyTNF-BlackRecycled-Down-HERO.jpg',
+    brand: 'The North Face', name: 'Veste 1996 Retro Nuptse', badge: '−30 % + 10 %',
+    desc: 'La doudoune iconique : duvet d\'oie 700, coupe ample, capuche rangée dans le col.',
+    specs: ['Duvet 700 RDS', 'Nylon recyclé', 'Capuche rangeable', 'Compactable'],
+    note: '<strong>Taille M · couleur Summit Navy / TNF Black</strong>, déjà sélectionnées via le lien.<br><strong>−10 % en plus</strong> avec le code <code>TNFMYU4ODTY6SUW2E</code> <button class="copy" type="button" data-code="TNFMYU4ODTY6SUW2E">Copier</button>',
+    price: '≈ 220,50 €', old: '350,00 €', priceNote: '245 € soldé, puis −10 % avec le code · prix relevé le 25/11/2026',
+    shops: [
+      { name: 'The North Face', best: true, p: '245,00 €', meta: 'avant code', url: 'https://www.thenorthface.com/fr-fr/p/homme-211701/veste-1996-retro-nuptse-pour-homme-NF0A3C8D?color=GOB&size=M' }
+    ]
   }
 ];
 
@@ -303,6 +317,13 @@ function cardHTML(it, i) {
     '<div class="price">' + it.price + '<s>' + it.old + '</s><small>' + it.priceNote + '</small></div>' +
     shops + '</div></article>';
 }
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('.copy');
+  if (!b) return;
+  const done = () => { b.textContent = 'Copié ✓'; setTimeout(() => b.textContent = 'Copier', 1600); };
+  if (navigator.clipboard) navigator.clipboard.writeText(b.dataset.code).then(done, done); else done();
+});
 
 let revealedCount = 0;
 function revealSlot(i) {
@@ -830,6 +851,7 @@ function frame() {
       g.rotation.set(0, u * 2, 0);
       g.userData.from = g.position.clone();
     } else {
+      if (!g.userData.from) g.userData.from = hands.clone();
       const p = clamp01((u - RELEASE) / FLIGHT), e = p * p * (3 - 2 * p);
       const to = camera.position.clone().add(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(1.4)).add(new THREE.Vector3(.35, -.15, 0));
       g.position.copy(g.userData.from).lerp(to, e);
