@@ -133,6 +133,124 @@
   .shops .p { font-weight: 700; white-space: nowrap; }
   .updated { text-align: center; color: var(--muted); font-size: 13px; margin: -32px 0 32px; }
 
+  /* ---------- Scène dansante ---------- */
+  .scene {
+    --beat: .6s;            /* durée d'un temps : à ajuster pour coller au tempo */
+    --start: 3s;            /* début de la danse après le lancement */
+    position: relative; border-radius: 22px; overflow: hidden;
+    border: 1px solid var(--line); background: #0d1330; margin-bottom: 48px;
+  }
+  .scene svg { display: block; width: 100%; height: auto; }
+  .scene.paused * { animation-play-state: paused !important; }
+
+  .splash {
+    position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+    background: rgba(6, 8, 20, .55); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+    transition: opacity .5s ease;
+  }
+  .splash.hide { opacity: 0; pointer-events: none; }
+  .splash p { color: #d4d4d8; font-size: 14px; margin-top: 12px; }
+  .open {
+    font: inherit; font-size: clamp(16px, 2.4vw, 20px); font-weight: 700; cursor: pointer;
+    color: #fff; background: var(--accent); border: 0; border-radius: 999px; padding: 16px 30px;
+    box-shadow: 0 10px 40px -8px rgba(229,72,77,.7); animation: pulse 1.6s ease-in-out infinite;
+  }
+  .open:hover { background: #f2555a; }
+  @keyframes pulse { 50% { transform: scale(1.06); } }
+
+  /* Rennes : au départ à quatre pattes */
+  .rd .torso { transform: rotate(78deg); }
+  .rd .head  { transform: rotate(-68deg); }
+  .rd .arm   { transform: rotate(-78deg); }
+  .santa .s-arm-l { transform: rotate(25deg); }
+  .santa .s-arm-r { transform: rotate(-25deg); }
+
+  .go .reins { animation: fade .5s ease .4s both; }
+  .go .rd .torso { animation: up-torso .9s cubic-bezier(.34,1.56,.64,1) var(--d) both, sway calc(var(--beat) * 2) ease-in-out var(--start) infinite alternate; }
+  .go .rd .head  { animation: up-head .9s cubic-bezier(.34,1.56,.64,1) var(--d) both, bob calc(var(--beat) * 2) ease-in-out var(--start) infinite alternate; }
+  .go .rd .arm-a { animation: up-arm .9s cubic-bezier(.34,1.56,.64,1) var(--d) both, wave var(--beat) ease-in-out var(--start) infinite alternate; }
+  .go .rd .arm-b { animation: up-arm .9s cubic-bezier(.34,1.56,.64,1) var(--d) both, swing calc(var(--beat) * 2) ease-in-out var(--start) infinite alternate; }
+  .go .leg-a { animation: stepA calc(var(--beat) * 8) ease-in-out var(--start) infinite; }
+  .go .leg-b { animation: stepB calc(var(--beat) * 8) ease-in-out var(--start) infinite; }
+  .go .dance { animation: bachata calc(var(--beat) * 8) ease-in-out var(--start) infinite; }
+  .go .turn  { animation: turn calc(var(--beat) * 16) ease-in-out calc(var(--start) + var(--beat) * 8) infinite; }
+
+  .go .santa .jump   { animation: jump 1s cubic-bezier(.45,0,.55,1) 1.8s both; }
+  .go .santa .s-torso { animation: hips calc(var(--beat) * 2) ease-in-out var(--start) infinite alternate; }
+  .go .santa .belly  { animation: wobble var(--beat) ease-in-out var(--start) infinite alternate; }
+  .go .santa .s-head { animation: bob calc(var(--beat) * 2) ease-in-out var(--start) infinite alternate; }
+  .go .santa .s-arm-l { animation: shakeL calc(var(--beat) / 2) ease-in-out var(--start) infinite alternate; }
+  .go .santa .s-arm-r { animation: shakeR calc(var(--beat) / 2) ease-in-out calc(var(--start) + var(--beat) / 2) infinite alternate; }
+
+  @keyframes fade { to { opacity: 0; } }
+  @keyframes up-torso { from { transform: rotate(78deg); } to { transform: rotate(0); } }
+  @keyframes up-head  { from { transform: rotate(-68deg); } to { transform: rotate(0); } }
+  @keyframes up-arm   { from { transform: rotate(-78deg); } to { transform: rotate(-20deg); } }
+  @keyframes sway  { from { transform: rotate(-5deg); } to { transform: rotate(6deg); } }
+  @keyframes hips  { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+  @keyframes bob   { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
+  @keyframes wave  { from { transform: rotate(-140deg); } to { transform: rotate(-178deg); } }
+  @keyframes swing { from { transform: rotate(-15deg); } to { transform: rotate(-100deg); } }
+  @keyframes wobble { from { transform: scale(1.06, .94); } to { transform: scale(.95, 1.05); } }
+  @keyframes shakeL { from { transform: rotate(118deg); } to { transform: rotate(155deg); } }
+  @keyframes shakeR { from { transform: rotate(-118deg); } to { transform: rotate(-155deg); } }
+  @keyframes stepA {
+    0%, 25%, 50%, 75%, 100% { transform: translateY(0) rotate(0); }
+    12.5%, 62.5% { transform: translateY(-8px) rotate(-12deg); }
+  }
+  @keyframes stepB {
+    0%, 25%, 50%, 75%, 100% { transform: translateY(0) rotate(0); }
+    37.5%, 87.5% { transform: translateY(-8px) rotate(12deg); }
+  }
+  /* Pas de bachata : 3 pas + tap avec coup de hanche, puis retour */
+  @keyframes bachata {
+    0%     { transform: translate(0, 0) rotate(0); }
+    12.5%  { transform: translate(14px, 0) rotate(3deg); }
+    25%    { transform: translate(28px, 0) rotate(-3deg); }
+    37.5%  { transform: translate(42px, 0) rotate(2deg); }
+    43.75% { transform: translate(44px, -10px) rotate(8deg); }
+    50%    { transform: translate(42px, 0) rotate(0); }
+    62.5%  { transform: translate(28px, 0) rotate(-3deg); }
+    75%    { transform: translate(14px, 0) rotate(3deg); }
+    87.5%  { transform: translate(0, 0) rotate(-2deg); }
+    93.75% { transform: translate(-2px, -10px) rotate(-8deg); }
+    100%   { transform: translate(0, 0) rotate(0); }
+  }
+  @keyframes turn {
+    0%, 44% { transform: scaleX(1); }
+    50%, 94% { transform: scaleX(-1); }
+    100% { transform: scaleX(1); }
+  }
+  @keyframes jump {
+    0%   { transform: translate(0, 0); }
+    15%  { transform: translate(0, 6px) scale(1.06, .9); }
+    55%  { transform: translate(150px, -140px) rotate(-14deg); }
+    88%  { transform: translate(280px, 22px) scale(1.06, .92); }
+    100% { transform: translate(280px, 16px); }
+  }
+  .tw { animation: twinkle 2.4s ease-in-out infinite alternate; }
+  .tw:nth-child(2n) { animation-delay: -1.2s; }
+  .tw:nth-child(3n) { animation-duration: 3.4s; }
+  @keyframes twinkle { from { opacity: .25; } to { opacity: 1; } }
+
+  /* Mini lecteur musique */
+  .music {
+    position: fixed; right: 16px; bottom: 16px; z-index: 20; width: 228px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px;
+    box-shadow: 0 20px 50px -15px rgba(0,0,0,.8);
+    opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity .4s ease, transform .4s ease;
+  }
+  .music.show { opacity: 1; transform: none; pointer-events: auto; }
+  .music iframe { display: block; width: 208px; height: 117px; border-radius: 8px; }
+  .music .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+  .music .t { font-size: 12px; line-height: 1.3; color: var(--muted); }
+  .music .t b { display: block; color: var(--text); font-weight: 600; }
+  .music button {
+    font: inherit; font-size: 14px; cursor: pointer; color: var(--text); background: #1f1f23;
+    border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; flex: none;
+  }
+  .music button:hover { border-color: #52525b; }
+
   footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 56px; }
   footer a { color: var(--text); }
 </style>
@@ -142,6 +260,127 @@
 <div class="snow" id="snow" aria-hidden="true"></div>
 
 <main class="wrap">
+
+  <!-- Scène : le Père Noël et ses rennes dansent -->
+  <section class="scene" id="scene" aria-label="Le Père Noël et ses rennes dansent">
+    <svg viewBox="0 0 900 400" role="img" aria-hidden="true">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#070b1f"/>
+          <stop offset="1" stop-color="#1d2b55"/>
+        </linearGradient>
+        <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+          <stop offset="0" stop-color="#fff6d5" stop-opacity=".35"/>
+          <stop offset="1" stop-color="#fff6d5" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="snowg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f4f8fc"/>
+          <stop offset="1" stop-color="#c9d6e6"/>
+        </linearGradient>
+      </defs>
+
+      <rect width="900" height="400" fill="url(#sky)"/>
+      <g fill="#fff">
+        <circle class="tw" cx="60" cy="40" r="1.6"/><circle class="tw" cx="140" cy="90" r="1.2"/>
+        <circle class="tw" cx="230" cy="30" r="1.8"/><circle class="tw" cx="320" cy="75" r="1.2"/>
+        <circle class="tw" cx="410" cy="35" r="1.5"/><circle class="tw" cx="500" cy="95" r="1.1"/>
+        <circle class="tw" cx="590" cy="45" r="1.7"/><circle class="tw" cx="680" cy="110" r="1.2"/>
+        <circle class="tw" cx="720" cy="25" r="1.4"/><circle class="tw" cx="860" cy="140" r="1.5"/>
+        <circle class="tw" cx="30" cy="150" r="1.1"/><circle class="tw" cx="370" cy="140" r="1.3"/>
+      </g>
+      <circle cx="810" cy="72" r="80" fill="url(#glow)"/>
+      <circle cx="810" cy="72" r="34" fill="#f5f0d6"/>
+      <circle cx="798" cy="62" r="6" fill="#e6dfbd"/><circle cx="820" cy="84" r="8" fill="#e6dfbd"/><circle cx="822" cy="58" r="3.5" fill="#e6dfbd"/>
+
+      <path d="M0,300 Q160,230 330,290 T660,270 T900,280 V400 H0Z" fill="#2a3b6b" opacity=".55"/>
+      <path d="M0,352 Q450,334 900,352 V400 H0Z" fill="url(#snowg)"/>
+
+      <!-- Rênes -->
+      <g class="reins" stroke="#7a4b22" stroke-width="2.5" fill="none" stroke-linecap="round">
+        <path d="M262,286 L380,289"/><path d="M262,286 Q460,300 650,289"/><path d="M262,286 Q560,305 800,289"/>
+      </g>
+
+      <!-- Sac de cadeaux -->
+      <g>
+        <ellipse cx="72" cy="296" rx="34" ry="40" fill="#8b5e3c"/>
+        <path d="M58,262 Q72,250 86,262" stroke="#5b3a1e" stroke-width="4" fill="none"/>
+        <rect x="92" y="282" width="28" height="24" rx="2" fill="#2f9e5b"/>
+        <rect x="103" y="282" width="6" height="24" fill="#f3c04f"/>
+        <rect x="56" y="250" width="22" height="18" rx="2" fill="#3b82f6" transform="rotate(-12 67 259)"/>
+      </g>
+
+      <!-- Père Noël -->
+      <g class="santa" transform="translate(150,350)">
+        <g class="jump"><g class="dance"><g class="turn">
+          <ellipse cx="0" cy="2" rx="38" ry="6" fill="#000" opacity=".18"/>
+          <g transform="translate(-13,-50)"><g class="leg-a">
+            <rect x="-9" y="0" width="18" height="40" fill="#b3122e"/>
+            <rect x="-13" y="36" width="24" height="14" rx="6" fill="#1a1a1a"/>
+          </g></g>
+          <g transform="translate(13,-50)"><g class="leg-b">
+            <rect x="-9" y="0" width="18" height="40" fill="#b3122e"/>
+            <rect x="-11" y="36" width="24" height="14" rx="6" fill="#1a1a1a"/>
+          </g></g>
+          <g transform="translate(0,-50)"><g class="s-torso">
+            <g transform="translate(0,-40)"><g class="belly">
+              <ellipse cx="0" cy="0" rx="40" ry="44" fill="#c8102e"/>
+              <rect x="-4" y="-40" width="8" height="72" fill="#fff"/>
+              <rect x="-40" y="31" width="80" height="12" rx="6" fill="#fff"/>
+              <rect x="-41" y="4" width="82" height="11" fill="#1a1a1a"/>
+              <rect x="-9" y="1.5" width="18" height="16" rx="2" fill="none" stroke="#f3c04f" stroke-width="3"/>
+            </g></g>
+            <g transform="translate(0,-84)"><g class="s-head">
+              <circle cx="0" cy="-22" r="21" fill="#f5cba7"/>
+              <path d="M-24,-22 Q-32,12 -10,24 Q0,32 10,24 Q32,12 24,-22 Q12,-8 0,-8 Q-12,-8 -24,-22Z" fill="#fff"/>
+              <path d="M0,-12 Q-10,-21 -19,-11 Q-9,-6 0,-10 Q9,-6 19,-11 Q10,-21 0,-12Z" fill="#f1f1f1" stroke="#d9d9d9"/>
+              <circle cx="0" cy="-17" r="4.5" fill="#e8967f"/>
+              <circle cx="-13" cy="-16" r="4" fill="#f4a3a3" opacity=".8"/><circle cx="13" cy="-16" r="4" fill="#f4a3a3" opacity=".8"/>
+              <ellipse cx="-7" cy="-26" rx="2.4" ry="3" fill="#222"/><ellipse cx="7" cy="-26" rx="2.4" ry="3" fill="#222"/>
+              <path d="M-12,-32 q5,-4 9,0 M3,-32 q5,-4 9,0" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <path d="M-20,-43 Q-14,-72 10,-76 Q30,-78 38,-60 L30,-56 Q22,-64 12,-60 Q16,-52 20,-43Z" fill="#c8102e"/>
+              <rect x="-25" y="-46" width="50" height="11" rx="5.5" fill="#fff"/>
+              <circle cx="36" cy="-58" r="7" fill="#fff"/>
+            </g></g>
+            <g transform="translate(-36,-70)"><g class="s-arm-l">
+              <rect x="-8" y="0" width="16" height="44" rx="8" fill="#c8102e"/>
+              <rect x="-9" y="36" width="18" height="8" rx="4" fill="#fff"/>
+              <circle cx="0" cy="50" r="8" fill="#1a1a1a"/>
+              <rect x="-2" y="52" width="4" height="14" fill="#8b5a2b"/>
+              <ellipse cx="0" cy="74" rx="9" ry="11" fill="#2fbf71"/>
+              <path d="M-8,70 h16 M-8,77 h16" stroke="#f3c04f" stroke-width="2.5"/>
+            </g></g>
+            <g transform="translate(36,-70)"><g class="s-arm-r">
+              <rect x="-8" y="0" width="16" height="44" rx="8" fill="#c8102e"/>
+              <rect x="-9" y="36" width="18" height="8" rx="4" fill="#fff"/>
+              <circle cx="0" cy="50" r="8" fill="#1a1a1a"/>
+              <rect x="-2" y="52" width="4" height="14" fill="#8b5a2b"/>
+              <ellipse cx="0" cy="74" rx="9" ry="11" fill="#f59e0b"/>
+              <path d="M-8,70 h16 M-8,77 h16" stroke="#e5484d" stroke-width="2.5"/>
+            </g></g>
+          </g></g>
+        </g></g></g>
+      </g>
+
+      <!-- Traîneau -->
+      <g>
+        <path d="M30,372 L230,372 Q276,372 282,338" stroke="#f3c04f" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M70,345 V372 M190,345 V372" stroke="#f3c04f" stroke-width="5"/>
+        <path d="M40,300 L215,300 Q250,300 250,265 Q250,240 272,236 Q262,262 262,290 Q258,345 205,345 L60,345 Q40,345 40,325Z" fill="#b3122e" stroke="#f3c04f" stroke-width="4"/>
+        <path d="M70,322 q20,-14 40,0 t40,0 t40,0" stroke="#f3c04f" stroke-width="3" fill="none"/>
+      </g>
+
+      <!-- Rennes (générés en JS) -->
+      <g id="herd"></g>
+    </svg>
+
+    <div class="splash" id="splash">
+      <div>
+        <button class="open" id="open" type="button">🎁 Ouvrir ma liste</button>
+        <p>Monte le son 🔊</p>
+      </div>
+    </div>
+  </section>
+
   <header>
     <span class="tag">🎄 <b>Noël 2026</b> · Julien</span>
     <h1>Ma liste de <span>Noël</span></h1>
@@ -258,7 +497,110 @@
   </footer>
 </main>
 
+<aside class="music" id="music" aria-label="Musique">
+  <div id="yt"></div>
+  <div class="row">
+    <div class="t"><b>Los Peces en el Río</b>Efecto SR</div>
+    <button id="toggle" type="button" aria-label="Pause">⏸</button>
+  </div>
+</aside>
+
 <script>
+  // ---------- Rennes ----------
+  function reindeer(x, delay, extra) {
+    var leg = function (cls, dx, fill) {
+      return '<g transform="translate(' + dx + ',-60)"><g class="' + cls + '">' +
+        '<rect x="-6" y="0" width="12" height="54" rx="6" fill="' + fill + '"/>' +
+        '<rect x="-7" y="52" width="16" height="8" rx="3" fill="#2b1a10"/></g></g>';
+    };
+    var arm = function (cls, dx, fill) {
+      return '<g transform="translate(' + dx + ',-48)"><g class="arm ' + cls + '">' +
+        '<rect x="-5" y="0" width="10" height="62" rx="5" fill="' + fill + '"/>' +
+        '<rect x="-6" y="58" width="12" height="10" rx="3" fill="#2b1a10"/></g></g>';
+    };
+    return '<g class="rd" style="--d:' + delay + 's" transform="translate(' + x + ',362)">' +
+      '<g class="dance"><g class="turn">' +
+        '<ellipse cx="4" cy="2" rx="30" ry="5" fill="#000" opacity=".18"/>' +
+        leg('leg-b', -8, '#6e4420') + leg('leg-a', 8, '#8b5a2b') +
+        '<g transform="translate(0,-60)"><g class="torso">' +
+          arm('arm-b', 2, '#6e4420') +
+          '<ellipse cx="-22" cy="-14" rx="7" ry="5" fill="#f1e2cc"/>' +
+          '<ellipse cx="0" cy="-30" rx="24" ry="38" fill="#8b5a2b"/>' +
+          '<ellipse cx="9" cy="-26" rx="12" ry="26" fill="#d9b48a"/>' +
+          '<ellipse cx="2" cy="-62" rx="15" ry="6" fill="#c8102e"/>' +
+          '<circle cx="14" cy="-57" r="4" fill="#f3c04f"/>' +
+          '<g transform="translate(4,-70)"><g class="head">' +
+            '<path d="M-2,-20 C-6,-34 -14,-42 -22,-50 M-10,-36 L-20,-34 M-16,-44 L-12,-54 M6,-20 C8,-36 16,-44 26,-50 M14,-38 L24,-36 M20,-45 L18,-56" stroke="#5b3a1e" stroke-width="4" stroke-linecap="round" fill="none"/>' +
+            '<ellipse cx="-10" cy="-14" rx="8" ry="4" fill="#7a4b22" transform="rotate(-25 -10 -14)"/>' +
+            '<ellipse cx="6" cy="-10" rx="15" ry="13" fill="#8b5a2b"/>' +
+            '<ellipse cx="19" cy="-4" rx="11" ry="8" fill="#d9b48a"/>' +
+            '<ellipse cx="29" cy="-6" rx="5" ry="4" fill="#2b1a10"/>' +
+            '<circle cx="9" cy="-15" r="4.5" fill="#fff"/><circle cx="10.5" cy="-15" r="2.3" fill="#111"/>' +
+            '<path d="M16,1 Q21,5 26,1" stroke="#2b1a10" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
+            (extra || '') +
+          '</g></g>' +
+          arm('arm-a', -2, '#8b5a2b') +
+        '</g></g>' +
+      '</g></g></g>';
+  }
+  var sombrero =
+    '<ellipse cx="4" cy="-22" rx="22" ry="4.5" fill="#e9b949"/>' +
+    '<path d="M-7,-23 Q-5,-40 4,-40 Q13,-40 15,-23Z" fill="#e9b949"/>' +
+    '<rect x="-6" y="-28" width="20" height="4" fill="#e5484d"/>';
+  var scarf =
+    '<path d="M-6,4 Q6,10 18,4" stroke="#2f9e5b" stroke-width="5" fill="none" stroke-linecap="round"/>';
+  document.getElementById('herd').innerHTML =
+    reindeer(320, 0.8, scarf) + reindeer(590, 1.0, sombrero) + reindeer(740, 1.2, '');
+
+  // ---------- Musique YouTube + lancement de la fête ----------
+  var VIDEO = 'i3-uvps5pRc';
+  var scene = document.getElementById('scene');
+  var splash = document.getElementById('splash');
+  var music = document.getElementById('music');
+  var toggle = document.getElementById('toggle');
+  var player = null, ready = false, wantPlay = false, started = false;
+
+  function startShow() {
+    if (started) return;
+    started = true;
+    splash.classList.add('hide');
+    music.classList.add('show');
+    scene.classList.add('go');
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    player = new YT.Player('yt', {
+      width: 208, height: 117, videoId: VIDEO,
+      playerVars: { playsinline: 1, rel: 0, loop: 1, playlist: VIDEO, modestbranding: 1 },
+      events: {
+        onReady: function () {
+          ready = true;
+          if (wantPlay) { player.playVideo(); }
+          else { try { player.playVideo(); } catch (e) {} } // tente le lancement automatique
+        },
+        onStateChange: function (e) {
+          if (e.data === 1) { startShow(); scene.classList.remove('paused'); toggle.textContent = '⏸'; toggle.setAttribute('aria-label', 'Pause'); }
+          if (e.data === 2) { scene.classList.add('paused'); toggle.textContent = '▶'; toggle.setAttribute('aria-label', 'Lecture'); }
+        }
+      }
+    });
+  };
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+
+  document.getElementById('open').addEventListener('click', function () {
+    splash.classList.add('hide');
+    music.classList.add('show');
+    if (ready && player) { player.unMute(); player.playVideo(); } else { wantPlay = true; }
+    setTimeout(startShow, 2500); // la fête démarre même si YouTube est bloqué
+  });
+
+  toggle.addEventListener('click', function () {
+    if (!player || !ready) return;
+    if (player.getPlayerState() === 1) player.pauseVideo(); else player.playVideo();
+  });
+
   // Si une image ne charge pas, on affiche un emoji à la place
   document.querySelectorAll('img[data-fallback]').forEach(function (img) {
     function fail() { var m = img.parentElement; if (m) { m.classList.add('noimg'); } img.remove(); }
