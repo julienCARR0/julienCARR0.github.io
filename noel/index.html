@@ -102,6 +102,13 @@
   }
   .iconbtn:hover { border-color: #52525b; }
 
+  .skip {
+    display: block; width: 100%; margin: -8px 0 18px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    color: var(--text); background: #1c1c21; border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px;
+    transition: border-color .2s, background .2s;
+  }
+  .skip:hover { border-color: #52525b; background: #222228; }
+  .all .skip { display: none; }
   .slots { display: grid; gap: 16px; }
   .slot { position: relative; }
 
@@ -245,6 +252,7 @@
     <button class="iconbtn" id="toggle" type="button" aria-label="Pause">⏸</button>
   </div>
   <div class="bar"><i id="barfill"></i></div>
+  <button class="skip" id="skip" type="button">⏩ Voir toute la liste maintenant</button>
   <div class="slots" id="slots"></div>
   <div class="done">🎉 Toute la liste est dévoilée. Merci d'avance !</div>
   <section class="now">
@@ -1090,6 +1098,7 @@ replayBtn.addEventListener('click', () => {
 /* ---------- Boucle ---------- */
 let started = false, running = false, T = 0, idle = 0;
 const thrown = ITEMS.map(() => false);
+let skipped = false;
 const clock = new THREE.Clock();
 const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3(), camTarget = new THREE.Vector3();
 const pill = document.getElementById('pill'), pillText = document.getElementById('pilltext'), ringFg = document.getElementById('ringfg');
@@ -1156,7 +1165,7 @@ function frame() {
     pose = lerpPose({ ...dp, aLz: 2.8, aRz: 2.8, legL: 0, legR: 0 }, dp, danceW);
     for (let k = 0; k < ITEMS.length; k++) {
       const t0 = FIRST_THROW + k * THROW_EVERY, u = T - t0;
-      if (u >= 0 && u < THROW_LEN) {
+      if (!skipped && u >= 0 && u < THROW_LEN) {
         const tp = throwPose(u, b);
         const w = Math.min(clamp01(u / .25), clamp01((THROW_LEN - u) / .35));
         pose = lerpPose(dp, tp, u < 2 ? clamp01(u / .25) : (u > THROW_LEN - .35 ? w : 1));
@@ -1171,7 +1180,7 @@ function frame() {
   // cadeaux
   for (let k = 0; k < ITEMS.length; k++) {
     const g = gifts[k], t0 = FIRST_THROW + k * THROW_EVERY, u = T - t0;
-    if (u < 1.35 || thrown[k]) { g.visible = false; continue; }
+    if (u < 1.35 || thrown[k] || skipped) { g.visible = false; continue; }
     const ua = santa.userData.arms;
     ua[0].children[2].getWorldPosition(tmpA); ua[1].children[2].getWorldPosition(tmpB);
     const hands = tmpA.add(tmpB).multiplyScalar(.5);
@@ -1269,6 +1278,15 @@ document.getElementById('open').addEventListener('click', () => {
   if (ready && player) { player.unMute(); player.playVideo(); } else wantPlay = true;
   // on attend que la musique démarre ; si YouTube est bloqué, la fête démarre quand même
   setTimeout(startShow, 1800);
+});
+document.getElementById('skip').addEventListener('click', () => {
+  skipped = true;
+  let d = 0;
+  ITEMS.forEach((_, i) => {
+    if (thrown[i]) return;
+    thrown[i] = true;
+    setTimeout(() => revealSlot(i), d); d += 220;
+  });
 });
 toggle.addEventListener('click', () => {
   if (player && ready && player.getPlayerState) {
